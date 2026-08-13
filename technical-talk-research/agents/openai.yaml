@@ -1,0 +1,4 @@
+interface:
+  display_name: "Pesquisa para Palestras Técnicas"
+  short_description: "Pesquisa e referências para palestras técnicas"
+  default_prompt: "Use $technical-talk-research para pesquisar e estruturar uma palestra técnica sobre ..."
