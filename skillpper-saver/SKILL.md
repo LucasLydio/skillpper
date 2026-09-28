@@ -12,6 +12,14 @@ Based on empirical development metrics: the primary drivers of runaway token con
 
 ---
 
+## ⚡ Quick Install
+
+```bash
+npx skills add kipperdev/skillpper --skill skillpper-saver
+```
+
+---
+
 ## 🎯 When to Use
 
 Activate this skill when:
@@ -33,18 +41,38 @@ Activate this skill when:
 - **Partial Reads**: For files exceeding 100 lines, use line slicing (`StartLine`/`EndLine` or `offset`/`limit`) instead of loading the entire content.
 - **Never Re-read**: Never re-read a file already loaded in the current session unless it was modified externally or by an edit tool. Trust what is already present in context.
 
-### 3. Browser Automation (Rule: Text > Screenshots)
+### 3. Context Auto-Monitoring & Cutoff Triggers
+- **150k Accumulated Context Threshold**: When a session reaches 2+ of the following signals, proactively suggest `/compact` or `/clear` with a 1-line handoff:
+  - 15+ tool calls executed in the current thread.
+  - Large build, compilation, or test suites logged in history.
+  - Multiple large source files loaded into context.
+  - Session wall-time exceeds 30 minutes with heavy tool usage.
+- **Idle Inactivity**: If a session remains inactive for over 1 hour, the prompt cache has expired. Summarize and start a fresh session to avoid re-paying full un-cached prompt tokens.
+
+### 4. Subagent Governance
+- **Avoid Spurious Subagents**: Never spawn subagents for small, sequential tasks. A new subagent incurs a fixed cost by re-deriving the entire project context from scratch.
+- **Lightweight Delegation**: When delegating purely mechanical or broad scanning tasks, explicitly configure subagents to use lightweight models (`haiku`, `flash`, or `flash_lite`).
+
+### 5. Tool Loop Brake
+- **Anti-Loop Safety**: If a tool call or terminal command fails twice with the identical error, do not retry a third time blindly. Stop immediately, diagnose the root cause, or ask for developer guidance.
+
+### 6. Browser Automation (Rule: Text > Screenshots)
 - **Text Extraction First**: To verify navigation, clicks, or loaded content, always extract DOM text (rendered HTML, page headings, or accessibility tree).
 - **Strict Visual Criteria**: Only take screenshots when the task is inherently visual (e.g., layout reviews, CSS styling checks, responsive viewports). Screenshots persist indefinitely in conversational history and are never evicted by prompt caching, inflating every subsequent turn.
 
-### 4. Surgical Log & Error Handling
+### 7. Surgical Log & Error Handling
 - **Immediate Truncation**: If a terminal command, build tool, or test runner produces more than 50 lines of output, extract only the first 5 lines, the core error message, and the immediate stack trace.
 - **Massive Logs**: Never paste multi-hundred-line outputs into the chat. Pipe them to a local file (e.g., `scratch/error.log`) and inspect using grep.
 
-### 5. Session Management & Handoffs (Highest Cost Lever)
-- **Prevent Marathon Sessions**: Continuing a single conversation across dozens of turns forces the agent to re-send the entire cumulative history on every new prompt.
-- **Cutoff Triggers**: After reaching a clear milestone (feature completed, bug resolved) or exceeding 15–20 tool calls, proactively suggest `/clear` or `/compact` along with a 1-line resume command (Handoff).
-- **Idle Inactivity**: If a session remains inactive for over 1 hour, the LLM prompt cache has expired. Summarize and start a fresh session.
+---
+
+## 💰 Model Tier & Cost Efficiency Reference
+
+| Tier | Example Models | Relative Cost | Recommended Tasks |
+| :--- | :--- | :--- | :--- |
+| **Fast / Lightweight** | Claude 3.5 Haiku, Gemini 2.0 Flash / Flash-Lite, GPT-4o-mini | **1x (Baseline)** | Mechanical tasks, boilerplate, file scanning, formatting, simple PR descriptions. |
+| **Standard Workhorse** | Claude 3.5 Sonnet, Gemini 2.0 Pro, GPT-4o | **~5x** | Core application coding, refactoring, feature implementation, regular debugging. |
+| **Heavy Reasoning** | Claude 3.7 Sonnet (High Effort), Claude 3 Opus, o1 / o3-mini | **~15x–30x** | Complex distributed systems architecture, subtle concurrency bugs, security reviews. |
 
 ---
 
