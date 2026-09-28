@@ -8,6 +8,8 @@ description: >-
 
 A governance and aggressive optimization skill designed to reduce token consumption, operating costs, and context window bloating for AI coding agents.
 
+This skill supports macOS, Linux, and Windows. See the [Cross-Platform Guide](references/cross-platform.md) for shell and path handling.
+
 Based on empirical development metrics: the primary drivers of runaway token consumption are not high-end models themselves, but rather **marathon sessions** (threads running for tens of hours), **repetitive re-reading of identical files**, **unnecessary screenshots during web automation**, and **dumping massive terminal logs** directly into the context window.
 
 ---
