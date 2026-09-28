@@ -1,12 +1,14 @@
 ---
 name: ai-memory-obsidian
 description: >-
-  Long-term persistent memory and continuous documentation for AI agents using Obsidian and ai-memory. Enables agents to record architectural decision records (ADRs), session digests, daily logs, and atomic notes in local vaults via MCP servers (Obsidian Local REST API / CLI or ai-memory). Use when the user requests saving or recalling past session context, managing cross-agent state, capturing durable project decisions, or creating structured notes in an Obsidian vault.
+  Portable workflows for persistent memory and Obsidian across macOS, Linux, and Windows. Use when the user asks to recall or save past context, record decisions, create vault notes, or configure ai-memory, Obsidian CLI, or an Obsidian MCP bridge.
 ---
 
 # AI Memory & Obsidian 🧠📚
 
 A skill providing **long-term persistent memory** and documentation governance for AI coding agents (Claude Code, Antigravity, Cursor, and others) using local **Obsidian** vaults and memory engines such as **ai-memory**.
+
+This skill supports macOS, Linux, and Windows. Choose native paths and agent configuration for the user's environment; see the [Cross-Platform Setup Guide](references/cross-platform-setup.md).
 
 ---
 
@@ -31,14 +33,20 @@ This skill equips agents with a systematic protocol to:
 
 ## ⚙️ Integration Modes (MCP & Local Vault)
 
-Agents connect to Obsidian vaults through two primary interfaces:
+Agents can connect to Obsidian through three interfaces:
 
-1. **Obsidian Local REST API / Obsidian CLI (Direct Vault Access)**:
-   - Reads, searches, and appends notes directly in your vault filesystem via Obsidian MCP tools (`@bitbonsai/mcpvault` or `mcp-obsidian-local`).
-   - Ideal for developers already using Obsidian as a personal or team knowledge base.
-2. **`ai-memory` Daemon (Semantic & FTS5 Search)**:
+1. **MCPVault filesystem bridge**:
+   - Reads and writes the vault directory through MCP using `@bitbonsai/mcpvault`; Obsidian does not need to be running.
+2. **Official Obsidian CLI**:
+   - Controls the desktop app through shell commands. It requires Obsidian 1.12.7+ and the app running.
+3. **Local REST API bridge**:
+   - Uses the Obsidian Local REST API community plugin with a compatible MCP server.
+
+These options work across macOS, Linux, and Windows when configured with the native vault path and the chosen agent's supported MCP or shell setup. See the [Cross-Platform Setup Guide](references/cross-platform-setup.md).
+
+The **`ai-memory` daemon** provides a separate persistent memory interface:
    - A background local service indexing agent sessions, tool observations, and handoffs in SQLite/FTS5.
-   - Enables millisecond full-text queries via CLI or MCP (`memory_query`, `memory_status`).
+   - Enables full-text queries via CLI or MCP (`memory_query`, `memory_status`).
 
 *(See comprehensive setup instructions in the [MCP Setup Guide](references/mcp-setup-guide.md)).*
 
@@ -48,20 +56,22 @@ Agents connect to Obsidian vaults through two primary interfaces:
 
 ### 1. Task Inception (The "Memory First" Rule)
 - When a task refers to past context ("as we discussed", "resume where we left off", "according to our decision"):
-  - Search the vault first (`search_notes`, `read_note`, or `ai-memory search`).
+  - Search configured memory tools first (for example, `memory_query` or the Obsidian MCP search/read tools).
   - Provide a concise 1-line confirmation to the developer:
     `🧠 Memory consulted: Found records in [[Architecture-Decision-JWT]] and [[Session-2026-09-25]].`
-  - If no prior records exist, proceed with standard cold analysis without delaying execution.
+  - If no memory integration is configured, continue from available context and offer setup only when it would help; do not assume a vault path.
 
 ### 2. Active Development (Capturing Decisions)
 - When a significant technical decision is finalized (library choice, naming convention, schema design):
   - Draft or write an ADR in `decisions/ADR-YYYY-MM-DD-<slug>.md`.
   - Use standard ADR statuses (`accepted`, `proposed`, `superseded`).
+  - If no vault is configured, keep the decision in the project's existing documentation or ask whether the user wants to configure a vault.
 
 ### 3. Session Wrap-up (Handoff & Daily Note)
 - When reaching logical milestones or session limits:
   - Generate an end-of-session note in `sessions/Session-YYYY-MM-DD-<id>.md` or append to `dailies/Daily-YYYY-MM-DD.md`.
   - Provide a 1-line resume command for the user to paste into the next session.
+  - Use automatic ai-memory handoff when the agent already provides it; avoid duplicating the same handoff in a vault note.
 
 ---
 
@@ -78,3 +88,4 @@ Agents connect to Obsidian vaults through two primary interfaces:
 - [MCP Setup Guide (Obsidian & ai-memory)](references/mcp-setup-guide.md)
 - [Note Templates (ADRs, Sessions, and Dailies)](references/note-templates.md)
 - [Cross-Session Handoff Protocol](references/handoff-protocol.md)
+- [Cross-Platform Setup Guide](references/cross-platform-setup.md)

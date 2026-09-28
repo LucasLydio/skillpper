@@ -2,11 +2,13 @@
 
 This guide explains how to connect your AI coding agent (Claude Code, Antigravity, Cursor, etc.) to Obsidian vaults and persistent memory engines.
 
+For platform-specific vault paths, data directories, and CLI behavior, see the [Cross-Platform Setup Guide](cross-platform-setup.md).
+
 ---
 
 ## 1. Connecting to Obsidian via MCP
 
-There are two battle-tested approaches to connect agents to your Obsidian vault:
+Choose the connection method that matches your agent and operating system:
 
 ### Option A: Direct Filesystem Bridge via `@bitbonsai/mcpvault` (Recommended — Zero Plugins Required)
 [`@bitbonsai/mcpvault`](https://www.npmjs.com/package/@bitbonsai/mcpvault) connects directly to your vault folder on disk. It requires no community plugins, no API keys, and works even when Obsidian is closed:
@@ -26,7 +28,18 @@ There are two battle-tested approaches to connect agents to your Obsidian vault:
 }
 ```
 
-### Option B: REST API Bridge via `mcp-obsidian-local` (For Obsidian Local REST API Plugin)
+### Option B: Official Obsidian CLI (No MCP server required)
+
+If your agent can run shell commands, the official CLI can search and edit the vault through the Obsidian desktop app:
+
+```shell
+obsidian search query="architecture decisions"
+obsidian daily
+```
+
+The CLI requires the Obsidian 1.12.7+ installer, command-line interface enabled in Settings, and the Obsidian app running. Registration differs by operating system; follow the [official CLI setup guide](https://obsidian.md/help/cli).
+
+### Option C: REST API Bridge via `mcp-obsidian-local` (For Obsidian Local REST API Plugin)
 If you already use the popular **Local REST API** community plugin inside Obsidian:
 1. Open Obsidian → **Settings** → **Community plugins** → install and enable **Local REST API**.
 2. Copy your generated **API Key**.
