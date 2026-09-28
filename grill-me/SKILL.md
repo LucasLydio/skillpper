@@ -10,6 +10,14 @@ A technical alignment skill designed to drill down into requirements, architectu
 
 ---
 
+## ⚡ Quick Install
+
+```bash
+npx skills add kipperdev/skillpper --skill grill-me
+```
+
+---
+
 ## 🎯 Why Does the /grill-me Protocol Exist?
 
 When starting a major feature, refactoring, or new system architecture, unspoken assumptions frequently cause rework. AI coding assistants typically fall into one of two traps:
