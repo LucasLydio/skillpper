@@ -33,15 +33,12 @@ This skill equips agents with a systematic protocol to:
 
 ## ⚙️ Integration Modes (MCP & Local Vault)
 
-Agents can connect to Obsidian through three interfaces:
+Agents can connect to Obsidian through two key-free interfaces:
 
 1. **MCPVault filesystem bridge**:
    - Reads and writes the vault directory through MCP using `@bitbonsai/mcpvault`; Obsidian does not need to be running.
 2. **Official Obsidian CLI**:
    - Controls the desktop app through shell commands. It requires Obsidian 1.12.7+ and the app running.
-3. **Local REST API bridge**:
-   - Uses the Obsidian Local REST API community plugin with a compatible MCP server.
-
 These options work across macOS, Linux, and Windows when configured with the native vault path and the chosen agent's supported MCP or shell setup. See the [Cross-Platform Setup Guide](references/cross-platform-setup.md).
 
 The **`ai-memory` daemon** provides a separate persistent memory interface:
@@ -64,7 +61,8 @@ The **`ai-memory` daemon** provides a separate persistent memory interface:
 ### 2. Active Development (Capturing Decisions)
 - When a significant technical decision is finalized (library choice, naming convention, schema design):
   - Draft or write an ADR in `decisions/ADR-YYYY-MM-DD-<slug>.md`.
-  - Use standard ADR statuses (`accepted`, `proposed`, `superseded`).
+  - Use standard ADR statuses (`accepted`, `proposed`, `deprecated`, `superseded`).
+  - Keep each note focused on one decision or concept. Link related notes instead of copying their full contents.
   - If no vault is configured, keep the decision in the project's existing documentation or ask whether the user wants to configure a vault.
 
 ### 3. Session Wrap-up (Handoff & Daily Note)
@@ -77,9 +75,11 @@ The **`ai-memory` daemon** provides a separate persistent memory interface:
 
 ## 🛡️ Markdown & Obsidian Integrity Rules
 
-1. **HTML/JSX Encapsulation**: Obsidian renders HTML directly in its DOM. NEVER leave raw HTML tags or unclosed JSX elements in markdown bodies (always enclose in ````html ... ```` or ````jsx ... ````). Unbalanced tags corrupt the editor's visual hierarchy.
-2. **Clean Wikilinks**: Prefer standard `[[Note-Name]]` internal links to keep the Obsidian knowledge graph interconnected.
-3. **Additive History**: Session logs and daily entries are strictly additive. Never summarize by destructively overwriting previous notes.
+1. **Sensitive Data Exclusion**: Before saving notes or enabling automatic capture, exclude credentials, API keys, tokens, passwords, private keys, environment dumps, personal vault paths, and confidential file contents. Store only a redacted description. Never copy `.env` files, credential stores, or complete tool output into the vault or `ai-memory`. Ask for consent before persisting content whose sensitivity is unclear.
+2. **Vault Boundary**: Keep the vault outside public repositories. Do not commit, publish, symlink, or expose the vault root through a project workspace. Grant an agent access only to the intended vault or subdirectory.
+3. **HTML/JSX Encapsulation**: This workflow keeps raw HTML, JSX, and SVG out of Markdown bodies unless they are inside an appropriately labelled code block. This avoids accidental rendering and malformed documents.
+4. **Clean Wikilinks**: Prefer standard `[[Note-Name]]` internal links to keep the Obsidian knowledge graph interconnected.
+5. **Additive History**: Session logs and daily entries are strictly additive. Never summarize by destructively overwriting previous notes.
 
 ---
 

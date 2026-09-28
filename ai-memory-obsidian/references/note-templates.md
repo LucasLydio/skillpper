@@ -65,6 +65,9 @@ Refactored the JWT verification layer, isolating token lifecycle validation into
 
 ## 🔄 Handoff for Next Session
 - **Next Step**: Add load tests for the login endpoint under concurrency.
+- **Critical Files**:
+  - `src/middlewares/auth.ts`
+  - `src/tests/load.test.ts`
 - **Resume Command**:
 > Continue load test implementation for the authentication endpoint in src/tests/load.test.ts.
 ````

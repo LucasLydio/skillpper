@@ -39,29 +39,11 @@ obsidian daily
 
 The CLI requires the Obsidian 1.12.7+ installer, command-line interface enabled in Settings, and the Obsidian app running. Registration differs by operating system; follow the [official CLI setup guide](https://obsidian.md/help/cli).
 
-### Option C: REST API Bridge via `mcp-obsidian-local` (For Obsidian Local REST API Plugin)
-If you already use the popular **Local REST API** community plugin inside Obsidian:
-1. Open Obsidian → **Settings** → **Community plugins** → install and enable **Local REST API**.
-2. Copy your generated **API Key**.
-3. Configure [`mcp-obsidian-local`](https://www.npmjs.com/package/mcp-obsidian-local) in your agent configuration:
+### Optional: Local REST API bridges
 
-```json
-{
-  "mcpServers": {
-    "obsidian": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "mcp-obsidian-local"
-      ],
-      "env": {
-        "OBSIDIAN_API_KEY": "YOUR_API_KEY_HERE",
-        "OBSIDIAN_BASE_URL": "https://127.0.0.1:27124"
-      }
-    }
-  }
-}
-```
+The official Obsidian CLI and `@bitbonsai/mcpvault` do not require an Obsidian API key. A key is required only when a user deliberately chooses the third-party Local REST API community plugin or an MCP server built on it.
+
+Prefer the key-free options above. If a Local REST API bridge is required, follow that bridge's current documentation and inject its credential through the MCP client's secret store or another non-committed runtime mechanism. Never paste the key into a repository file, shared agent configuration, example, note, handoff, prompt, shell history, or captured environment dump. Bind the service to loopback unless remote access is explicitly required, and rotate the key immediately if it is disclosed.
 
 ---
 
@@ -92,6 +74,4 @@ To install and compile the `ai-memory` daemon, follow the official setup instruc
 
 ## 3. Direct Filesystem Access (Zero MCP Mode)
 
-If you prefer not to run MCP servers, agents can manipulate vault files directly if the vault folder is mounted or symlinked in the project workspace:
-- Place notes under `docs/notes/` or create a directory symlink to your vault root.
-- The agent reads, creates, and edits standard Markdown notes with zero external protocol dependencies.
+If you prefer not to run MCP servers, an agent may manipulate Markdown files directly when its sandbox is explicitly granted access to the intended vault or subdirectory. Keep the vault outside public repositories and do not mount or symlink the vault root into a repository workspace. Use the narrowest access scope supported by the agent.

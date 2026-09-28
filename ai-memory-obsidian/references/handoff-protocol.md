@@ -20,8 +20,10 @@ When ending an active session, the agent constructs a 4-part summary block:
 - **Option A (Obsidian Vault)**:
   - Append to the session document in `sessions/Session-YYYY-MM-DD.md`.
   - Or log directly into the developer daily note in `dailies/Daily-YYYY-MM-DD.md`.
+  - Redact credentials, personal absolute paths, environment dumps, and confidential content before writing.
 - **Option B (`ai-memory` Daemon)**:
   - The daemon records the handoff snapshot in SQLite and automatically serves it during SessionStart hook events in new terminals.
+  - Confirm its capture and redaction policy before enabling automatic observations; persist only the minimum context needed to resume.
 
 ---
 
