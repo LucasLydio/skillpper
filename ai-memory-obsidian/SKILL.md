@@ -10,6 +10,14 @@ A skill providing **long-term persistent memory** and documentation governance f
 
 ---
 
+## ⚡ Quick Install
+
+```bash
+npx skills add kipperdev/skillpper --skill ai-memory-obsidian
+```
+
+---
+
 ## 🎯 Why Persistent Memory?
 
 By default, AI coding agents are amnesic: every `/clear` or fresh session discards past conversational history, architectural trade-offs, and domain knowledge.
@@ -26,7 +34,7 @@ This skill equips agents with a systematic protocol to:
 Agents connect to Obsidian vaults through two primary interfaces:
 
 1. **Obsidian Local REST API / Obsidian CLI (Direct Vault Access)**:
-   - Reads, searches, and appends notes directly in your vault filesystem via Obsidian MCP tools.
+   - Reads, searches, and appends notes directly in your vault filesystem via Obsidian MCP tools (`@bitbonsai/mcpvault` or `mcp-obsidian-local`).
    - Ideal for developers already using Obsidian as a personal or team knowledge base.
 2. **`ai-memory` Daemon (Semantic & FTS5 Search)**:
    - A background local service indexing agent sessions, tool observations, and handoffs in SQLite/FTS5.
