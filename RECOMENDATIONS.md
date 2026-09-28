@@ -1,5 +1,3 @@
-<!-- SKILLS:END -->
-
 ## Recommended third-party skills
 
 A curated index of skills and collections created and maintained by other authors. These projects are installed separately from Skillpper; each project's repository is the source for its documentation, requirements, license, and updates.
