@@ -1,8 +1,14 @@
-# Skillpper
+<h1 align="center">Welcome to Skillpper 🐿️ </h1>
 
+<p align="center">
 <img src="./logo.png" alt="Skillpper mascot" width="150">
+</p>
 
-Practical skills for developers and their AI coding agents 🤓
+<p align="center">
+ <em> Practical skills for developers and their AI coding agents 🤓 </em>
+</p>
+
+---
 
 Skillpper is a community collection of reusable instructions for everyday development work: designing interfaces, researching technical topics, and sharing workflows that work. Each skill gives your agent a focused process, useful references, and clear expectations for the result.
 
