@@ -15,7 +15,7 @@ Based on empirical development metrics: the primary drivers of runaway token con
 ## ⚡ Quick Install
 
 ```bash
-npx skills add kipperdev/skillpper --skill skillpper-saver
+npx skills add https://github.com/kipperdev/skillpper --skill skillpper-saver
 ```
 
 ---
