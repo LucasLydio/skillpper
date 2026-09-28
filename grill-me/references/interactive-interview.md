@@ -1,12 +1,14 @@
 # Interactive Interview Guidelines & Alignment Axes 📋
 
-A guide for AI coding agents to structure deep technical questionnaires when executing the `/grill-me` protocol.
+A guide for AI coding agents to structure focused, iterative interviews when executing the `/grill-me` protocol.
+
+The guide is platform-neutral and requires no scripts or fixed paths. Use the interactive input supported by the current agent on macOS, Linux, or Windows. If a host limits questions per call, ask a small first round and continue only along branches made relevant by the answers.
 
 ---
 
 ## 1. Five Fundamental Axes of Any Technical Task
 
-When constructing native form modals (`ask_question` / `AskUserQuestion`), ensure the following axes are addressed:
+When asking questions, use the following axes to choose the decisions that matter for the task. Do not force every axis into one round:
 
 1. **Scope & Delivery Boundaries**:
    - What is the minimum viable deliverable for this task?
