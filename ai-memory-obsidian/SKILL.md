@@ -13,7 +13,7 @@ A skill providing **long-term persistent memory** and documentation governance f
 ## ⚡ Quick Install
 
 ```bash
-npx skills add kipperdev/skillpper --skill ai-memory-obsidian
+npx skills add https://github.com/kipperdev/skillpper --skill ai-memory-obsidian
 ```
 
 ---
