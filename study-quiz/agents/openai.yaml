@@ -1,0 +1,4 @@
+interface:
+  display_name: "Quizzes de Estudo"
+  short_description: "Quiz com múltipla escolha, mini-desafios, dicas e gabarito"
+  default_prompt: "Use $study-quiz para criar um quiz sobre ... no nível ..."
