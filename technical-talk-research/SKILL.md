@@ -39,10 +39,10 @@ Use quando o pedido incluir roteiro, estrutura, slides, palestra, keynote, apres
 3. Crie o arco: problema → modelo mental → evidência/demonstração → limites e trade-offs → conclusão acionável.
 4. Coloque os IDs das fontes que sustentam cada afirmação técnica no próprio slide ou em suas notas. Não deixe números, marcos históricos, comparações, resultados de estudos ou funcionamento de sistemas sem citação.
 5. Reserve o último slide substantivo para `Referências bibliográficas`. Ele deve conter todas — e somente — as fontes citadas, em formato completo e legível. Não coloque conteúdo após esse slide, exceto créditos legais obrigatórios.
-6. Materialize primeiro um blueprint Markdown seguindo [o modelo](references/blueprint-template.md). Rode o validador antes de gerar ou entregar a apresentação:
+6. Materialize primeiro um blueprint Markdown seguindo [o modelo](references/blueprint-template.md). Rode o validador antes de gerar ou entregar a apresentação. O script `scripts/validate_references.py` fica no diretório desta skill: localize o caminho onde ela está instalada e execute-o.
 
 ```bash
-python3 .claude/skills/technical-talk-research/scripts/validate_references.py caminho/da/palestra.md
+python3 <diretório-desta-skill>/scripts/validate_references.py caminho/da/palestra.md
 ```
 
 7. Antes de gerar os slides, confirme que o MCP da Gamma está disponível. Use o recurso exposto pelo MCP para criar a apresentação a partir do blueprint e passe o identificador de template exato `nkhgcucv1lw00wc`. Não invente nomes de ferramentas do MCP: use a ferramenta que ele disponibilizar para aplicar templates ou criar apresentações.
