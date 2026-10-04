@@ -3,6 +3,7 @@ import tempfile
 import unittest
 
 from scripts.update_skill_votes import (
+    canonical_discussions,
     dashboard_data,
     parse_skill_marker,
     read_skill_metadata,
@@ -69,6 +70,44 @@ class SkillVotesTests(unittest.TestCase):
         self.assertEqual(data["total_votes"], 2)
         self.assertEqual(data["skills"][0]["skill"], "beta")
         self.assertEqual(data["skills"][0]["rank"], 1)
+
+    def test_canonical_discussions_ignore_duplicate_markers(self):
+        official = {
+            "id": "D_official",
+            "body": "<!-- skillpper-vote-skill: alpha -->",
+            "url": "https://github.com/example/repo/discussions/1",
+            "reactionGroups": [{"content": "THUMBS_UP", "users": {"totalCount": 4}}],
+        }
+        duplicate = {
+            "id": "D_duplicate",
+            "body": "<!-- skillpper-vote-skill: alpha -->",
+            "url": "https://github.com/example/repo/discussions/2",
+            "reactionGroups": [{"content": "THUMBS_UP", "users": {"totalCount": 99}}],
+        }
+
+        discussions = canonical_discussions(
+            {"alpha": "First skill"},
+            {"alpha": {"id": "D_official", "url": official["url"]}},
+            {"D_official": official, "D_duplicate": duplicate},
+        )
+
+        self.assertEqual(thumbs_up_count(discussions["alpha"]), 4)
+
+    def test_canonical_discussions_does_not_accept_preclaimed_marker(self):
+        preclaim = {
+            "id": "D_preclaim",
+            "body": "<!-- skillpper-vote-skill: alpha -->",
+            "url": "https://github.com/example/repo/discussions/2",
+            "reactionGroups": [{"content": "THUMBS_UP", "users": {"totalCount": 99}}],
+        }
+
+        discussions = canonical_discussions(
+            {"alpha": "First skill"},
+            {},
+            {"D_preclaim": preclaim},
+        )
+
+        self.assertEqual(discussions, {})
 
     def test_read_skill_metadata_discovers_root_skills(self):
         with tempfile.TemporaryDirectory() as temp:

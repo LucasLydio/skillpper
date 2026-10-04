@@ -16,6 +16,7 @@ import yaml
 ROOT = Path(__file__).resolve().parents[1]
 RANKING = ROOT / "RANKING.md"
 DOCS_DATA = ROOT / "docs" / "votes.json"
+DISCUSSION_REGISTRY = ROOT / "docs" / "vote-discussions.json"
 DEFAULT_CATEGORY = "Skill Votes"
 MARKER_RE = re.compile(r"<!--\s*skillpper-vote-skill:\s*([a-z0-9]+(?:-[a-z0-9]+)*)\s*-->")
 
@@ -113,7 +114,7 @@ def repository_context(token: str, owner: str, name: str, category_name: str) ->
     )
 
 
-def fetch_vote_discussions(token: str, owner: str, name: str, category_id: str) -> dict[str, dict]:
+def fetch_category_discussions(token: str, owner: str, name: str, category_id: str) -> dict[str, dict]:
     query = """
     query($owner: String!, $name: String!, $categoryId: ID!, $after: String) {
       repository(owner: $owner, name: $name) {
@@ -148,9 +149,7 @@ def fetch_vote_discussions(token: str, owner: str, name: str, category_id: str) 
         )
         page = data["repository"]["discussions"]
         for node in page["nodes"]:
-            skill = parse_skill_marker(node["body"])
-            if skill:
-                discussions[skill] = node
+            discussions[node["id"]] = node
         if not page["pageInfo"]["hasNextPage"]:
             return discussions
         after = page["pageInfo"]["endCursor"]
@@ -195,6 +194,66 @@ def thumbs_up_count(discussion: dict | None) -> int:
         if group["content"] == "THUMBS_UP":
             return int(group["users"]["totalCount"])
     return 0
+
+
+def read_discussion_registry() -> dict[str, dict]:
+    if not DISCUSSION_REGISTRY.exists():
+        return {}
+    data = json.loads(DISCUSSION_REGISTRY.read_text(encoding="utf-8"))
+    if not isinstance(data, dict):
+        raise ValueError(f"{DISCUSSION_REGISTRY}: expected a JSON object")
+    discussions = data.get("discussions", {})
+    if not isinstance(discussions, dict):
+        raise ValueError(f"{DISCUSSION_REGISTRY}: discussions must be an object")
+    return discussions
+
+
+def write_discussion_registry(registry: dict[str, dict], check: bool) -> int:
+    content = json.dumps({"discussions": dict(sorted(registry.items()))}, ensure_ascii=False, indent=2) + "\n"
+    current = DISCUSSION_REGISTRY.read_text(encoding="utf-8") if DISCUSSION_REGISTRY.exists() else ""
+    if current == content:
+        print("Vote discussion registry is up to date.")
+        return 0
+    if check:
+        print("Vote discussion registry is outdated. Run: python scripts/update_skill_votes.py", file=sys.stderr)
+        return 1
+    DISCUSSION_REGISTRY.parent.mkdir(parents=True, exist_ok=True)
+    DISCUSSION_REGISTRY.write_text(content, encoding="utf-8")
+    print("Updated the vote discussion registry.")
+    return 0
+
+
+def canonical_discussions(skills: dict[str, str], registry: dict[str, dict], discussions_by_id: dict[str, dict]) -> dict[str, dict]:
+    discussions = {}
+    marker_claims: dict[str, list[str]] = {skill: [] for skill in skills}
+    for discussion_id, discussion in discussions_by_id.items():
+        skill = parse_skill_marker(discussion.get("body", ""))
+        if skill in marker_claims:
+            marker_claims[skill].append(discussion_id)
+
+    for skill in sorted(skills):
+        entry = registry.get(skill)
+        if not isinstance(entry, dict):
+            continue
+        discussion_id = entry.get("id")
+        if not isinstance(discussion_id, str):
+            continue
+        discussion = discussions_by_id.get(discussion_id)
+        if not discussion:
+            print(f"Registered vote discussion for {skill} was not found.")
+            continue
+        marker = parse_skill_marker(discussion.get("body", ""))
+        if marker != skill:
+            print(f"Registered vote discussion for {skill} has an invalid marker; ignoring it.")
+            continue
+        discussions[skill] = discussion
+
+    for skill, ids in marker_claims.items():
+        registered_id = registry.get(skill, {}).get("id") if isinstance(registry.get(skill), dict) else None
+        duplicates = [discussion_id for discussion_id in ids if discussion_id != registered_id]
+        if duplicates:
+            print(f"Ignoring unregistered duplicate vote discussions for {skill}: {', '.join(duplicates)}")
+    return discussions
 
 
 def render_ranking(skills: dict[str, str], discussions: dict[str, dict], category_name: str) -> str:
@@ -323,22 +382,36 @@ def main() -> int:
         if not token or not repository:
             content = render_ranking(skills, {}, args.category)
             data = dashboard_data(skills, {}, args.category, repository)
-            return write_ranking(content, args.check) or write_dashboard_data(data, args.check)
+            registry = read_discussion_registry()
+            registry = {skill: registry[skill] for skill in sorted(skills) if skill in registry}
+            return (
+                write_ranking(content, args.check)
+                or write_dashboard_data(data, args.check)
+                or write_discussion_registry(registry, args.check)
+            )
 
         owner, name = split_repository(repository)
         repository_id, category_id = repository_context(token, owner, name, args.category)
-        discussions = fetch_vote_discussions(token, owner, name, category_id)
+        registry = read_discussion_registry()
+        registry = {skill: registry[skill] for skill in sorted(skills) if skill in registry}
+        discussions_by_id = fetch_category_discussions(token, owner, name, category_id)
+        discussions = canonical_discussions(skills, registry, discussions_by_id)
         missing = [skill for skill in sorted(skills) if skill not in discussions]
         if args.sync_discussions:
             for skill in missing:
                 discussions[skill] = create_discussion(token, repository_id, category_id, skill)
+                registry[skill] = {"id": discussions[skill]["id"], "url": discussions[skill]["url"]}
                 print(f"Created vote discussion for {skill}.")
         elif missing:
             print("Missing vote discussions: " + ", ".join(missing))
 
         content = render_ranking(skills, discussions, args.category)
         data = dashboard_data(skills, discussions, args.category, repository)
-        return write_ranking(content, args.check) or write_dashboard_data(data, args.check)
+        return (
+            write_ranking(content, args.check)
+            or write_dashboard_data(data, args.check)
+            or write_discussion_registry(registry, args.check)
+        )
     except (OSError, RuntimeError, ValueError, yaml.YAMLError) as exc:
         print(f"Error: {exc}", file=sys.stderr)
         return 1

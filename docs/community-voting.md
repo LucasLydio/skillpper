@@ -10,7 +10,7 @@ Skillpper can use GitHub Discussions as a low-friction voting surface for skills
 4. Run **Actions -> Update skill votes -> Run workflow** with `sync_discussions` enabled.
 5. Enable GitHub Pages from the default branch's `/docs` folder.
 
-The first manual run creates one vote discussion for each root-level skill. Later scheduled runs create any missing vote discussions and update `RANKING.md` and `docs/votes.json` from the current reaction counts every five minutes.
+The first manual run creates one vote discussion for each root-level skill and records its discussion ID in `docs/vote-discussions.json`. Later scheduled runs create any missing vote discussions and update `RANKING.md` and `docs/votes.json` from the current reaction counts every five minutes.
 
 ## How voting works
 
@@ -20,14 +20,14 @@ Each generated discussion includes a hidden marker:
 <!-- skillpper-vote-skill: design-craft -->
 ```
 
-The ranking script uses that marker to connect a GitHub Discussion to a skill folder. It counts only `:+1:` reactions on the discussion itself.
+The ranking script uses that marker only on registered discussions created by the workflow. The trusted skill-to-discussion mapping lives in `docs/vote-discussions.json`, so copied markers in community-created discussions are ignored. It counts only `:+1:` reactions on the registered discussion itself.
 
 ## Permissions
 
 The workflow requests:
 
 - `discussions: write` to create missing vote discussions during sync runs.
-- `contents: write` to commit generated `RANKING.md` updates.
+- `contents: write` to commit generated `RANKING.md`, `docs/votes.json`, and `docs/vote-discussions.json` updates.
 
 Forked pull requests normally cannot create discussions in the upstream repository. This is expected. The automation starts working after maintainers merge it and run it from the upstream repository.
 
