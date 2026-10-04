@@ -22,8 +22,13 @@ This index is generated from the `name` and `description` in each root-level ski
 
 | Skill | Description |
 | --- | --- |
+| [ai-memory-obsidian](./ai-memory-obsidian/SKILL.md) | Portable workflows for persistent memory and Obsidian across macOS, Linux, and Windows. Use when the user asks to recall or save past context, record decisions, create vault notes, or configure ai-memory, Obsidian CLI, or an Obsidian MCP bridge. |
 | [design-craft](./design-craft/SKILL.md) | Opinionated product-design skill for building, reviewing, polishing, and iterating on landing pages, apps, dashboards, AI products, design systems, and brand touchpoints. UX and comprehension first, then restraint (three type sizes, delete decoration), then foundations, then tactical craft — hierarchy, spacing systems, type scales, HSL palettes, shadows, finishing touches. Distilled from 20 YC Design Review videos (Linear, Stripe, Cursor, Framer) plus the Refactoring UI book. Use whenever the user asks to design, redesign, critique, or polish anything user-facing: "make it look better/more professional/trustworthy", de-slop the AI/vibe-coded look, fix a landing or pricing page, improve conversion, design an AI feature or agent UI, set up tokens or a design system, review a URL/screenshot/mockup. Also trigger for tactical UI questions — spacing feels off, visual hierarchy, choosing colors, typography, empty states, Tailwind/CSS styling — even without the word "design". Not for pure backend/DevOps work. |
+| [skillpper-saver](./skillpper-saver/SKILL.md) | Aggressive token, context, and cost optimization mode for AI coding agents (Claude Code, Antigravity, Cursor, etc.). Prevents marathon sessions, eliminates redundant file re-reading, prioritizes text extraction over screenshots in browser automation, and manages context windows with surgical cutoff triggers. Use when the user requests token savings, context optimization, quota conservation, or when starting extensive refactoring, browsing, or debugging tasks. |
+| [study-quiz](./study-quiz/SKILL.md) | Use ao pedir quiz, teste, prova, simulado, questões de múltipla escolha, mini-desafio, gabarito, “me testa sobre X”, “gera um quiz de X” ou uma avaliação sobre um assunto, em um nível ou numa faixa de níveis. Use também quando o usuário responder um quiz gerado aqui e quiser a correção. Não use para palestras, slides, design, flashcards, resumo ou plano de estudo. |
 | [technical-talk-research](./technical-talk-research/SKILL.md) | Pesquisa e estrutura palestras técnicas em PT-BR com fontes atuais e verificáveis. Use ao pedir referências para uma explicação técnica, levantamento de artigos ou posts recentes, curadoria de fontes, roteiro ou slides de palestra, ou revisão da bibliografia de uma apresentação. Pesquisa somente no catálogo de fontes aprovado, mantém rastreabilidade de cada afirmação técnica e exige um slide final de Referências bibliográficas. Cria apresentações exclusivamente pelo MCP da Gamma, usando o template \`nkhgcucv1lw00wc\`. |
+
+<!-- SKILLS:END -->
 
 We also have a bunch of recomendation of third-party skills you can use on your daily workflow, [check it out!](RECOMENDATIONS.md)
 
@@ -49,13 +54,13 @@ npm --version
 Open a terminal in the project where you want to use the skills. Preview the available skills:
 
 ```bash
-npx skills add kipperdev/community-skills --list
+npx skills add kipperdev/skillpper --list
 ```
 
 Then launch the interactive installer:
 
 ```bash
-npx skills add kipperdev/community-skills
+npx skills add kipperdev/skillpper
 ```
 
 Follow the prompts to select your skills, target agents, and installation scope. Project installation makes the skills available in that project; global installation makes them available across your projects.
@@ -63,13 +68,13 @@ Follow the prompts to select your skills, target agents, and installation scope.
 To install just one skill:
 
 ```bash
-npx skills add kipperdev/community-skills --skill design-craft
+npx skills add kipperdev/skillpper --skill design-craft
 ```
 
 To install it globally for Codex:
 
 ```bash
-npx skills add kipperdev/community-skills --skill design-craft --agent codex --global
+npx skills add kipperdev/skillpper --skill design-craft --agent codex --global
 ```
 
 ### 3. Put a skill to work
@@ -86,11 +91,11 @@ New skills, improvements to existing workflows, clearer documentation, and bug r
 
 ### 1. Fork and clone the repository
 
-[Create a fork](https://github.com/kipperdev/community-skills/fork), then clone your fork and create a branch (replace `YOUR-USERNAME` with your GitHub username):
+[Create a fork](https://github.com/kipperdev/skillpper/fork), then clone your fork and create a branch (replace `YOUR-USERNAME` with your GitHub username):
 
 ```bash
-git clone https://github.com/YOUR-USERNAME/community-skills.git
-cd community-skills
+git clone https://github.com/YOUR-USERNAME/skillpper.git
+cd skillpper
 git switch -c add/my-skill
 ```
 
@@ -167,7 +172,7 @@ git push -u origin add/my-skill
 
 Open a pull request from your branch to this repository's default branch. Explain the problem your skill solves, include an example prompt, and describe how you tested it. For improvements, explain what changes for the user. GitHub Actions validates the metadata and index generator; the README index is refreshed after merge.
 
-For ideas or problems that do not need a pull request yet, [open an issue](https://github.com/kipperdev/community-skills/issues).
+For ideas or problems that do not need a pull request yet, [open an issue](https://github.com/kipperdev/skillpper/issues).
 
 ## How the index stays up to date
 
