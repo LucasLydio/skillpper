@@ -72,9 +72,14 @@ class SkillsIndexTests(unittest.TestCase):
 class RepositoryIndexTests(unittest.TestCase):
     """Guard the checked-in README, not just the generator in a temp dir."""
 
+    maxDiff = None
+
     def test_readme_index_is_in_sync(self):
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
-        self.assertEqual(updated_readme(ROOT), readme)
+        self.assertEqual(
+            updated_readme(ROOT), readme,
+            "README skills index is outdated. Run: python scripts/update_skills_index.py",
+        )
 
 
 if __name__ == "__main__":
