@@ -1,0 +1,294 @@
+#!/usr/bin/env python3
+"""Generate RANKING.md from GitHub Discussion vote reactions."""
+
+import argparse
+import html
+import json
+import os
+from pathlib import Path
+import re
+import sys
+from urllib import error, request
+
+import yaml
+
+ROOT = Path(__file__).resolve().parents[1]
+RANKING = ROOT / "RANKING.md"
+DEFAULT_CATEGORY = "Skill Votes"
+MARKER_RE = re.compile(r"<!--\s*skillpper-vote-skill:\s*([a-z0-9]+(?:-[a-z0-9]+)*)\s*-->")
+
+
+def read_skill_metadata(root: Path) -> dict[str, str]:
+    """Return root-level skill names mapped to descriptions."""
+    skills = {}
+    for path in sorted(root.glob("*/SKILL.md")):
+        if path.parent.name.startswith("."):
+            continue
+        lines = path.read_text(encoding="utf-8").splitlines()
+        if not lines or lines[0] != "---":
+            raise ValueError(f"{path}: expected YAML frontmatter starting with ---")
+        try:
+            end = lines.index("---", 1)
+        except ValueError as exc:
+            raise ValueError(f"{path}: missing closing --- in frontmatter") from exc
+        metadata = yaml.safe_load("\n".join(lines[1:end]))
+        if not isinstance(metadata, dict):
+            raise ValueError(f"{path}: frontmatter must be a mapping")
+        name = metadata.get("name")
+        description = metadata.get("description")
+        if not isinstance(name, str) or not isinstance(description, str):
+            raise ValueError(f"{path}: name and description must be strings")
+        if name != path.parent.name:
+            raise ValueError(f"{path}: name must match folder name {path.parent.name!r}")
+        skills[name] = description
+    return skills
+
+
+def vote_body(skill: str) -> str:
+    return "\n".join(
+        [
+            f"<!-- skillpper-vote-skill: {skill} -->",
+            "",
+            f"# Vote for `{skill}`",
+            "",
+            "React to this discussion with `:+1:` to vote for this skill.",
+            "Add a comment if you want to share what worked, what was confusing, or what would make it better.",
+        ]
+    )
+
+
+def parse_skill_marker(body: str) -> str | None:
+    match = MARKER_RE.search(body or "")
+    return match.group(1) if match else None
+
+
+def github_graphql(token: str, query: str, variables: dict) -> dict:
+    payload = json.dumps({"query": query, "variables": variables}).encode("utf-8")
+    req = request.Request(
+        "https://api.github.com/graphql",
+        data=payload,
+        headers={
+            "Authorization": f"Bearer {token}",
+            "Content-Type": "application/json",
+            "Accept": "application/vnd.github+json",
+        },
+        method="POST",
+    )
+    try:
+        with request.urlopen(req, timeout=30) as response:
+            result = json.loads(response.read().decode("utf-8"))
+    except error.HTTPError as exc:
+        detail = exc.read().decode("utf-8", errors="replace")
+        raise RuntimeError(f"GitHub GraphQL request failed: {exc.code} {detail}") from exc
+    if result.get("errors"):
+        raise RuntimeError(f"GitHub GraphQL returned errors: {result['errors']}")
+    return result["data"]
+
+
+def repository_context(token: str, owner: str, name: str, category_name: str) -> tuple[str, str]:
+    query = """
+    query($owner: String!, $name: String!) {
+      repository(owner: $owner, name: $name) {
+        id
+        discussionCategories(first: 25) {
+          nodes {
+            id
+            name
+          }
+        }
+      }
+    }
+    """
+    repo = github_graphql(token, query, {"owner": owner, "name": name})["repository"]
+    if repo is None:
+        raise RuntimeError(f"Repository {owner}/{name} was not found")
+    for category in repo["discussionCategories"]["nodes"]:
+        if category["name"].lower() == category_name.lower():
+            return repo["id"], category["id"]
+    raise RuntimeError(
+        f"Discussion category {category_name!r} was not found. "
+        "Enable GitHub Discussions and create that category first."
+    )
+
+
+def fetch_vote_discussions(token: str, owner: str, name: str, category_id: str) -> dict[str, dict]:
+    query = """
+    query($owner: String!, $name: String!, $categoryId: ID!, $after: String) {
+      repository(owner: $owner, name: $name) {
+        discussions(first: 100, after: $after, categoryId: $categoryId, orderBy: {field: CREATED_AT, direction: ASC}) {
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
+          nodes {
+            id
+            title
+            body
+            url
+            reactionGroups {
+              content
+              users {
+                totalCount
+              }
+            }
+          }
+        }
+      }
+    }
+    """
+    discussions: dict[str, dict] = {}
+    after = None
+    while True:
+        data = github_graphql(
+            token,
+            query,
+            {"owner": owner, "name": name, "categoryId": category_id, "after": after},
+        )
+        page = data["repository"]["discussions"]
+        for node in page["nodes"]:
+            skill = parse_skill_marker(node["body"])
+            if skill:
+                discussions[skill] = node
+        if not page["pageInfo"]["hasNextPage"]:
+            return discussions
+        after = page["pageInfo"]["endCursor"]
+
+
+def create_discussion(token: str, repository_id: str, category_id: str, skill: str) -> dict:
+    mutation = """
+    mutation($repositoryId: ID!, $categoryId: ID!, $title: String!, $body: String!) {
+      createDiscussion(input: {repositoryId: $repositoryId, categoryId: $categoryId, title: $title, body: $body}) {
+        discussion {
+          id
+          title
+          body
+          url
+          reactionGroups {
+            content
+            users {
+              totalCount
+            }
+          }
+        }
+      }
+    }
+    """
+    data = github_graphql(
+        token,
+        mutation,
+        {
+            "repositoryId": repository_id,
+            "categoryId": category_id,
+            "title": f"Vote: {skill}",
+            "body": vote_body(skill),
+        },
+    )
+    return data["createDiscussion"]["discussion"]
+
+
+def thumbs_up_count(discussion: dict | None) -> int:
+    if not discussion:
+        return 0
+    for group in discussion.get("reactionGroups", []):
+        if group["content"] == "THUMBS_UP":
+            return int(group["users"]["totalCount"])
+    return 0
+
+
+def render_ranking(skills: dict[str, str], discussions: dict[str, dict], category_name: str) -> str:
+    rows = []
+    for skill in sorted(skills):
+        discussion = discussions.get(skill)
+        rows.append(
+            {
+                "skill": skill,
+                "votes": thumbs_up_count(discussion),
+                "url": discussion["url"] if discussion else "",
+            }
+        )
+    rows.sort(key=lambda row: (-row["votes"], row["skill"]))
+
+    lines = [
+        "# Community Skill Ranking",
+        "",
+        "This ranking is generated from GitHub Discussion `:+1:` reactions.",
+        f"Vote discussions live in the `{category_name}` discussion category.",
+        "",
+        "| Rank | Skill | Votes | Discussion |",
+        "| ---: | --- | ---: | --- |",
+    ]
+    for index, row in enumerate(rows, start=1):
+        skill = html.escape(row["skill"], quote=False)
+        discussion = f"[Vote]({row['url']})" if row["url"] else "Not created yet"
+        lines.append(f"| {index} | [{skill}](./{skill}/SKILL.md) | {row['votes']} | {discussion} |")
+    if not rows:
+        lines.append("| - | No skills available yet. | 0 | - |")
+    lines.extend(
+        [
+            "",
+            "Do not edit this file by hand. Run `python scripts/update_skill_votes.py` instead.",
+            "",
+        ]
+    )
+    return "\n".join(lines)
+
+
+def write_ranking(content: str, check: bool) -> int:
+    current = RANKING.read_text(encoding="utf-8") if RANKING.exists() else ""
+    if current == content:
+        print("Community ranking is up to date.")
+        return 0
+    if check:
+        print("Community ranking is outdated. Run: python scripts/update_skill_votes.py", file=sys.stderr)
+        return 1
+    RANKING.write_text(content, encoding="utf-8")
+    print("Updated the community ranking.")
+    return 0
+
+
+def split_repository(value: str) -> tuple[str, str]:
+    parts = value.split("/", 1)
+    if len(parts) != 2 or not all(parts):
+        raise ValueError("GITHUB_REPOSITORY must look like owner/name")
+    return parts[0], parts[1]
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--category", default=DEFAULT_CATEGORY, help="GitHub Discussions category used for voting")
+    parser.add_argument("--check", action="store_true", help="fail if RANKING.md is outdated")
+    parser.add_argument(
+        "--sync-discussions",
+        action="store_true",
+        help="create missing vote discussions before generating RANKING.md",
+    )
+    args = parser.parse_args()
+
+    try:
+        skills = read_skill_metadata(ROOT)
+        token = os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN")
+        repository = os.environ.get("GITHUB_REPOSITORY")
+        if not token or not repository:
+            content = render_ranking(skills, {}, args.category)
+            return write_ranking(content, args.check)
+
+        owner, name = split_repository(repository)
+        repository_id, category_id = repository_context(token, owner, name, args.category)
+        discussions = fetch_vote_discussions(token, owner, name, category_id)
+        missing = [skill for skill in sorted(skills) if skill not in discussions]
+        if args.sync_discussions:
+            for skill in missing:
+                discussions[skill] = create_discussion(token, repository_id, category_id, skill)
+                print(f"Created vote discussion for {skill}.")
+        elif missing:
+            print("Missing vote discussions: " + ", ".join(missing))
+
+        content = render_ranking(skills, discussions, args.category)
+        return write_ranking(content, args.check)
+    except (OSError, RuntimeError, ValueError, yaml.YAMLError) as exc:
+        print(f"Error: {exc}", file=sys.stderr)
+        return 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())
