@@ -33,6 +33,8 @@ This index is generated from the `name` and `description` in each root-level ski
 
 We also have a bunch of recomendation of third-party skills you can use on your daily workflow, [check it out!](RECOMENDATIONS.md)
 
+Community votes can be shown in the [GitHub Pages dashboard](docs/index.html) and summarized in [RANKING.md](RANKING.md). Maintainers can enable the low-friction voting workflow by following [the community voting setup](docs/community-voting.md).
+
 ### Suggest a recommendation
 
 Open a pull request adding a row to this table with the project name, original repository, author, a short description of its use case, and official installation instructions. Include an example of how you used it in the pull request so maintainers can assess the recommendation.
@@ -158,6 +160,7 @@ source .venv/bin/activate
 python -m pip install -r scripts/requirements.txt
 python scripts/update_skills_index.py
 python scripts/update_skills_index.py --check
+python scripts/update_skill_votes.py --check
 python -m unittest discover -s tests
 ```
 
