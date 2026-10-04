@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Skillpper Community Ranking</title>
+    <meta name="description" content="Community ranking for Skillpper skills, powered by GitHub Discussion votes.">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="topbar" aria-label="Primary">
+        <a class="brand" href="./">
+          <img src="logo.png" alt="" width="44" height="44">
+          <span>Skillpper Ranking</span>
+        </a>
+        <div class="topbar-actions">
+          <a class="text-link" id="repositoryLink" href="#" hidden>Repository</a>
+          <a class="button button-secondary" id="syncButton" href="#" aria-disabled="true">Sync votes</a>
+        </div>
+      </nav>
+
+      <section class="hero" aria-labelledby="pageTitle">
+        <div class="hero-copy">
+          <p class="eyebrow">Community leaderboard</p>
+          <h1 id="pageTitle">Find the skills developers trust most.</h1>
+          <p class="hero-text">
+            Vote counts come from GitHub Discussion reactions. Use search to scan the collection, then open a skill's vote thread to support it.
+          </p>
+        </div>
+        <div class="hero-panel" aria-label="Ranking summary">
+          <img class="hero-logo" src="logo.png" alt="Skillpper mascot">
+          <div>
+            <span class="summary-label">Total votes</span>
+            <strong id="totalVotes">0</strong>
+          </div>
+          <div>
+            <span class="summary-label">Skills ranked</span>
+            <strong id="totalSkills">0</strong>
+          </div>
+        </div>
+      </section>
+    </header>
+
+    <main class="page-shell">
+      <section class="toolbar" aria-label="Skill search and metadata">
+        <label class="search-field">
+          <span>Search skills</span>
+          <input id="searchInput" type="search" placeholder="Search by name or description" autocomplete="off">
+        </label>
+        <p class="updated" id="updatedAt">Loading votes...</p>
+      </section>
+
+      <section class="leaderboard" aria-labelledby="leaderboardTitle">
+        <div class="section-heading">
+          <p class="eyebrow">Live from discussions</p>
+          <h2 id="leaderboardTitle">Leaderboard</h2>
+        </div>
+        <div class="skill-list" id="skillList" aria-live="polite"></div>
+        <p class="empty-state" id="emptyState" hidden>No skills match your search.</p>
+      </section>
+    </main>
+
+    <template id="skillCardTemplate">
+      <article class="skill-card">
+        <div class="rank-block">
+          <span class="rank"></span>
+        </div>
+        <div class="skill-main">
+          <div class="skill-title-row">
+            <h3></h3>
+            <span class="vote-pill"></span>
+          </div>
+          <p></p>
+          <div class="skill-actions">
+            <a class="button" data-kind="discussion" href="#">Vote on GitHub</a>
+            <a class="text-link" data-kind="source" href="#">Read skill</a>
+          </div>
+        </div>
+      </article>
+    </template>
+
+    <script src="app.js" defer></script>
+  </body>
+</html>

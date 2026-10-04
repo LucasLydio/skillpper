@@ -3,6 +3,7 @@ import tempfile
 import unittest
 
 from scripts.update_skill_votes import (
+    dashboard_data,
     parse_skill_marker,
     read_skill_metadata,
     render_ranking,
@@ -49,6 +50,25 @@ class SkillVotesTests(unittest.TestCase):
         }
         self.assertEqual(thumbs_up_count(discussion), 3)
         self.assertEqual(thumbs_up_count(None), 0)
+
+    def test_dashboard_data_includes_repository_totals_and_ranks(self):
+        data = dashboard_data(
+            {"alpha": "First skill", "beta": "Second skill"},
+            {
+                "beta": {
+                    "url": "https://github.com/example/repo/discussions/2",
+                    "reactionGroups": [{"content": "THUMBS_UP", "users": {"totalCount": 2}}],
+                }
+            },
+            "Skill Votes",
+            "example/repo",
+        )
+
+        self.assertEqual(data["repository"], "example/repo")
+        self.assertEqual(data["total_skills"], 2)
+        self.assertEqual(data["total_votes"], 2)
+        self.assertEqual(data["skills"][0]["skill"], "beta")
+        self.assertEqual(data["skills"][0]["rank"], 1)
 
     def test_read_skill_metadata_discovers_root_skills(self):
         with tempfile.TemporaryDirectory() as temp:

@@ -30,7 +30,7 @@ This index is generated from the `name` and `description` in each root-level ski
 
 We also have a bunch of recomendation of third-party skills you can use on your daily workflow, [check it out!](RECOMENDATIONS.md)
 
-Community votes can be summarized in [RANKING.md](RANKING.md). Maintainers can enable the low-friction voting workflow by following [the community voting setup](docs/community-voting.md).
+Community votes can be shown in the [GitHub Pages dashboard](docs/index.html) and summarized in [RANKING.md](RANKING.md). Maintainers can enable the low-friction voting workflow by following [the community voting setup](docs/community-voting.md).
 
 ### Suggest a recommendation
 

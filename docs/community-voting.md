@@ -1,6 +1,6 @@
 # Community Voting
 
-Skillpper can use GitHub Discussions as a low-friction voting surface for skills. Community members vote by reacting with `:+1:` to one discussion per skill, and a scheduled workflow generates `RANKING.md`.
+Skillpper can use GitHub Discussions as a low-friction voting surface for skills. Community members vote by reacting with `:+1:` to one discussion per skill, and a scheduled workflow generates `RANKING.md` plus the GitHub Pages dashboard data.
 
 ## Maintainer setup
 
@@ -8,8 +8,9 @@ Skillpper can use GitHub Discussions as a low-friction voting surface for skills
 2. Create a discussion category named `Skill Votes`.
 3. Merge the voting workflow.
 4. Run **Actions -> Update skill votes -> Run workflow** with `sync_discussions` enabled.
+5. Enable GitHub Pages from the default branch's `/docs` folder.
 
-The first manual run creates one vote discussion for each root-level skill. Later scheduled runs create any missing vote discussions and update `RANKING.md` from the current reaction counts every five minutes.
+The first manual run creates one vote discussion for each root-level skill. Later scheduled runs create any missing vote discussions and update `RANKING.md` and `docs/votes.json` from the current reaction counts every five minutes.
 
 ## How voting works
 

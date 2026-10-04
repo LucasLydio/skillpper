@@ -2,6 +2,7 @@
 """Generate RANKING.md from GitHub Discussion vote reactions."""
 
 import argparse
+from datetime import datetime, timezone
 import html
 import json
 import os
@@ -14,6 +15,7 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 RANKING = ROOT / "RANKING.md"
+DOCS_DATA = ROOT / "docs" / "votes.json"
 DEFAULT_CATEGORY = "Skill Votes"
 MARKER_RE = re.compile(r"<!--\s*skillpper-vote-skill:\s*([a-z0-9]+(?:-[a-z0-9]+)*)\s*-->")
 
@@ -196,17 +198,7 @@ def thumbs_up_count(discussion: dict | None) -> int:
 
 
 def render_ranking(skills: dict[str, str], discussions: dict[str, dict], category_name: str) -> str:
-    rows = []
-    for skill in sorted(skills):
-        discussion = discussions.get(skill)
-        rows.append(
-            {
-                "skill": skill,
-                "votes": thumbs_up_count(discussion),
-                "url": discussion["url"] if discussion else "",
-            }
-        )
-    rows.sort(key=lambda row: (-row["votes"], row["skill"]))
+    rows = ranked_rows(skills, discussions)
 
     lines = [
         "# Community Skill Ranking",
@@ -219,7 +211,7 @@ def render_ranking(skills: dict[str, str], discussions: dict[str, dict], categor
     ]
     for index, row in enumerate(rows, start=1):
         skill = html.escape(row["skill"], quote=False)
-        discussion = f"[Vote]({row['url']})" if row["url"] else "Not created yet"
+        discussion = f"[Vote]({row['discussion_url']})" if row["discussion_url"] else "Not created yet"
         lines.append(f"| {index} | [{skill}](./{skill}/SKILL.md) | {row['votes']} | {discussion} |")
     if not rows:
         lines.append("| - | No skills available yet. | 0 | - |")
@@ -243,6 +235,66 @@ def write_ranking(content: str, check: bool) -> int:
         return 1
     RANKING.write_text(content, encoding="utf-8")
     print("Updated the community ranking.")
+    return 0
+
+
+def ranked_rows(skills: dict[str, str], discussions: dict[str, dict]) -> list[dict]:
+    rows = []
+    for skill in sorted(skills):
+        discussion = discussions.get(skill)
+        rows.append(
+            {
+                "skill": skill,
+                "description": " ".join(skills[skill].split()),
+                "votes": thumbs_up_count(discussion),
+                "discussion_url": discussion["url"] if discussion else "",
+            }
+        )
+    rows.sort(key=lambda row: (-row["votes"], row["skill"]))
+    for index, row in enumerate(rows, start=1):
+        row["rank"] = index
+    return rows
+
+
+def dashboard_data(skills: dict[str, str], discussions: dict[str, dict], category_name: str, repository: str | None) -> dict:
+    rows = ranked_rows(skills, discussions)
+    return {
+        "updated_at": datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z"),
+        "repository": repository,
+        "category": category_name,
+        "total_skills": len(rows),
+        "total_votes": sum(row["votes"] for row in rows),
+        "skills": rows,
+    }
+
+
+def write_dashboard_data(data: dict, check: bool) -> int:
+    current_data = None
+    if DOCS_DATA.exists():
+        try:
+            current_data = json.loads(DOCS_DATA.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            current_data = None
+    if isinstance(current_data, dict):
+        comparable_current = dict(current_data)
+        comparable_next = dict(data)
+        comparable_current.pop("updated_at", None)
+        comparable_next.pop("updated_at", None)
+        if comparable_current == comparable_next:
+            print("Dashboard vote data is up to date.")
+            return 0
+
+    content = json.dumps(data, ensure_ascii=False, indent=2) + "\n"
+    current = DOCS_DATA.read_text(encoding="utf-8") if DOCS_DATA.exists() else ""
+    if current == content:
+        print("Dashboard vote data is up to date.")
+        return 0
+    if check:
+        print("Dashboard vote data is outdated. Run: python scripts/update_skill_votes.py", file=sys.stderr)
+        return 1
+    DOCS_DATA.parent.mkdir(parents=True, exist_ok=True)
+    DOCS_DATA.write_text(content, encoding="utf-8")
+    print("Updated the dashboard vote data.")
     return 0
 
 
@@ -270,7 +322,8 @@ def main() -> int:
         repository = os.environ.get("GITHUB_REPOSITORY")
         if not token or not repository:
             content = render_ranking(skills, {}, args.category)
-            return write_ranking(content, args.check)
+            data = dashboard_data(skills, {}, args.category, repository)
+            return write_ranking(content, args.check) or write_dashboard_data(data, args.check)
 
         owner, name = split_repository(repository)
         repository_id, category_id = repository_context(token, owner, name, args.category)
@@ -284,7 +337,8 @@ def main() -> int:
             print("Missing vote discussions: " + ", ".join(missing))
 
         content = render_ranking(skills, discussions, args.category)
-        return write_ranking(content, args.check)
+        data = dashboard_data(skills, discussions, args.category, repository)
+        return write_ranking(content, args.check) or write_dashboard_data(data, args.check)
     except (OSError, RuntimeError, ValueError, yaml.YAMLError) as exc:
         print(f"Error: {exc}", file=sys.stderr)
         return 1
