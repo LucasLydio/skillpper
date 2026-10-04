@@ -9,7 +9,7 @@ Skillpper can use GitHub Discussions as a low-friction voting surface for skills
 3. Merge the voting workflow.
 4. Run **Actions -> Update skill votes -> Run workflow** with `sync_discussions` enabled.
 
-The first manual run creates one vote discussion for each root-level skill. Later scheduled runs create any missing vote discussions and update `RANKING.md` from the current reaction counts.
+The first manual run creates one vote discussion for each root-level skill. Later scheduled runs create any missing vote discussions and update `RANKING.md` from the current reaction counts every five minutes.
 
 ## How voting works
 
