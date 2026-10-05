@@ -2,6 +2,8 @@
 
 Skillpper can use GitHub Discussions as a low-friction voting surface for skills. Community members vote by reacting with `:+1:` to one discussion per skill, and a scheduled workflow generates `RANKING.md` plus the GitHub Pages dashboard data.
 
+For the full post-merge setup checklist, see [Community Voting Rollout](community-voting-rollout.md).
+
 ## Maintainer setup
 
 1. Enable GitHub Discussions in the repository settings.
