@@ -1,0 +1,4 @@
+interface:
+  display_name: "Good Design"
+  short_description: "UX para conversão e retenção"
+  default_prompt: "Use $good-design para auditar esta experiência e propor melhorias éticas para valor, ativação e retenção."
