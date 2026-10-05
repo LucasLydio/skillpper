@@ -1,0 +1,43 @@
+schema_version: 1
+purpose: Criar diagramas didáticos e boards editáveis que expliquem mecanismos técnicos no Excalidraw.
+differentiation: >-
+  Usa dados concretos, transformações e consequências visíveis; distingue board para
+  vídeo de apresentação com slides nativos. Entrega .excalidraw portátil e revisa
+  o resultado visual, incluindo comparações com entradas equivalentes.
+access:
+  files_read:
+    - Blueprint, referências visuais, código e arquivos Excalidraw fornecidos para a tarefa
+    - Prints e referências incluídos nesta skill
+  files_written:
+    - Arquivo .excalidraw, backup da cena editada e capturas de conferência no destino autorizado
+    - Imagens exportadas e guia de gravação quando incluídos no pedido
+  network_hosts:
+    - excalidraw.com e app.excalidraw.com quando a tarefa incluir uma cena online
+    - plus.excalidraw.com para consultar a funcionalidade de apresentação
+    - youtube.com e fontes técnicas fornecidas ou pertinentes ao conceito, quando a análise exigir consulta
+  tools:
+    - Leitura e edição de arquivos locais
+    - Inspeção de imagens e navegador, quando disponíveis
+    - Interface ou conector suportado do Excalidraw para edição e exportação autorizadas
+  dependencies:
+    - Acesso à cena e conta apropriada para operações online; criação local não exige conta
+    - Recurso de apresentação nativa disponível na conta quando slides forem solicitados
+    - prepare-technical-slides é uma integração opcional para planejamento completo da aula
+cases:
+  - id: happy-path
+    prompt: Transforme a explicação de geração autorregressiva em um board para vídeo, mantendo a mesma entrada na comparação e entregando um .excalidraw.
+    expected:
+      - Mostra o token produzido entrando no contexto da etapa seguinte, com relações visíveis.
+      - Usa rótulos curtos, escala legível e formas editáveis.
+      - Entrega um board navegável, com arquivo .excalidraw e estado de revisão informado.
+    forbidden:
+      - Converter automaticamente o pedido em uma grade de slides textuais.
+      - Apresentar tokens ou resultados ilustrativos como execução real.
+  - id: boundary
+    prompt: Melhore apenas o diagrama de acoplamento desta cena compartilhada; o navegador não está disponível e o restante do board deve permanecer intacto.
+    expected:
+      - Preserva o restante no arquivo fornecido e prepara uma revisão local, se o arquivo estiver disponível.
+      - Informa a limitação de acesso e distingue arquivo preparado de cena online atualizada.
+    forbidden:
+      - Alegar upload ou revisão no navegador sem acesso.
+      - Substituir o board inteiro ou apagar elementos fora do escopo.
