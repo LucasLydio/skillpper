@@ -82,7 +82,7 @@ Votes help us understand which skills are useful, which ones need improvement, a
 ## 6. Ongoing maintenance
 
 - New skills are picked up automatically from root-level `*/SKILL.md` files.
-- The workflow runs every five minutes.
+- The workflow runs every five minutes, offset from exact five-minute boundaries to reduce GitHub Actions schedule delays.
 - Missing official vote discussions are created automatically.
 - Copied vote markers in community-created discussions are ignored.
 - The trusted discussion mapping is stored in `docs/vote-discussions.json`.

@@ -12,7 +12,7 @@ For the full post-merge setup checklist, see [Community Voting Rollout](communit
 4. Run **Actions -> Update skill votes -> Run workflow** with `sync_discussions` enabled.
 5. Enable GitHub Pages from the default branch's `/docs` folder.
 
-The first manual run creates one vote discussion for each root-level skill and records its discussion ID in `docs/vote-discussions.json`. Later scheduled runs create any missing vote discussions and update `RANKING.md` and `docs/votes.json` from the current reaction counts every five minutes.
+The first manual run creates one vote discussion for each root-level skill and records its discussion ID in `docs/vote-discussions.json`. Later scheduled runs create any missing vote discussions and update `RANKING.md` and `docs/votes.json` from the current reaction counts every five minutes, offset from exact five-minute boundaries to reduce GitHub Actions schedule delays.
 
 ## How voting works
 
