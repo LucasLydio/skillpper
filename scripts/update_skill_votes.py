@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate RANKING.md from GitHub Discussion vote reactions."""
+"""Generate RANKING.md from GitHub Discussion upvotes."""
 
 import argparse
 from datetime import datetime, timezone
@@ -54,7 +54,7 @@ def vote_body(skill: str) -> str:
             "",
             f"# Vote for `{skill}`",
             "",
-            "React to this discussion with `:+1:` to vote for this skill.",
+            "Use this discussion's upvote button to vote for this skill.",
             "Add a comment if you want to share what worked, what was confusing, or what would make it better.",
         ]
     )
@@ -128,12 +128,7 @@ def fetch_category_discussions(token: str, owner: str, name: str, category_id: s
             title
             body
             url
-            reactionGroups {
-              content
-              users {
-                totalCount
-              }
-            }
+            upvoteCount
           }
         }
       }
@@ -164,12 +159,7 @@ def create_discussion(token: str, repository_id: str, category_id: str, skill: s
           title
           body
           url
-          reactionGroups {
-            content
-            users {
-              totalCount
-            }
-          }
+          upvoteCount
         }
       }
     }
@@ -187,13 +177,10 @@ def create_discussion(token: str, repository_id: str, category_id: str, skill: s
     return data["createDiscussion"]["discussion"]
 
 
-def thumbs_up_count(discussion: dict | None) -> int:
+def upvote_count(discussion: dict | None) -> int:
     if not discussion:
         return 0
-    for group in discussion.get("reactionGroups", []):
-        if group["content"] == "THUMBS_UP":
-            return int(group["users"]["totalCount"])
-    return 0
+    return int(discussion.get("upvoteCount", 0))
 
 
 def read_discussion_registry() -> dict[str, dict]:
@@ -262,7 +249,7 @@ def render_ranking(skills: dict[str, str], discussions: dict[str, dict], categor
     lines = [
         "# Community Skill Ranking",
         "",
-        "This ranking is generated from GitHub Discussion `:+1:` reactions.",
+        "This ranking is generated from GitHub Discussion upvotes.",
         f"Vote discussions live in the `{category_name}` discussion category.",
         "",
         "| Rank | Skill | Votes | Discussion |",
@@ -305,7 +292,7 @@ def ranked_rows(skills: dict[str, str], discussions: dict[str, dict]) -> list[di
             {
                 "skill": skill,
                 "description": " ".join(skills[skill].split()),
-                "votes": thumbs_up_count(discussion),
+                "votes": upvote_count(discussion),
                 "discussion_url": discussion["url"] if discussion else "",
             }
         )

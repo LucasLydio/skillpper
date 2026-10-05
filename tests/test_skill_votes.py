@@ -8,7 +8,7 @@ from scripts.update_skill_votes import (
     parse_skill_marker,
     read_skill_metadata,
     render_ranking,
-    thumbs_up_count,
+    upvote_count,
     vote_body,
 )
 
@@ -27,11 +27,11 @@ class SkillVotesTests(unittest.TestCase):
         discussions = {
             "study-quiz": {
                 "url": "https://github.com/example/repo/discussions/2",
-                "reactionGroups": [{"content": "THUMBS_UP", "users": {"totalCount": 7}}],
+                "upvoteCount": 7,
             },
             "design-craft": {
                 "url": "https://github.com/example/repo/discussions/1",
-                "reactionGroups": [{"content": "THUMBS_UP", "users": {"totalCount": 7}}],
+                "upvoteCount": 7,
             },
         }
 
@@ -42,15 +42,10 @@ class SkillVotesTests(unittest.TestCase):
         self.assertIn("| 1 | [design-craft](./design-craft/SKILL.md) | 7 | [Vote](", ranking)
         self.assertIn("| 3 | [technical-talk-research](./technical-talk-research/SKILL.md) | 0 | Not created yet |", ranking)
 
-    def test_thumbs_up_count_ignores_other_reactions(self):
-        discussion = {
-            "reactionGroups": [
-                {"content": "HEART", "users": {"totalCount": 10}},
-                {"content": "THUMBS_UP", "users": {"totalCount": 3}},
-            ]
-        }
-        self.assertEqual(thumbs_up_count(discussion), 3)
-        self.assertEqual(thumbs_up_count(None), 0)
+    def test_upvote_count_reads_discussion_upvotes(self):
+        self.assertEqual(upvote_count({"upvoteCount": 3}), 3)
+        self.assertEqual(upvote_count({"otherCount": 9}), 0)
+        self.assertEqual(upvote_count(None), 0)
 
     def test_dashboard_data_includes_repository_totals_and_ranks(self):
         data = dashboard_data(
@@ -58,7 +53,7 @@ class SkillVotesTests(unittest.TestCase):
             {
                 "beta": {
                     "url": "https://github.com/example/repo/discussions/2",
-                    "reactionGroups": [{"content": "THUMBS_UP", "users": {"totalCount": 2}}],
+                    "upvoteCount": 2,
                 }
             },
             "Skill Votes",
@@ -76,13 +71,13 @@ class SkillVotesTests(unittest.TestCase):
             "id": "D_official",
             "body": "<!-- skillpper-vote-skill: alpha -->",
             "url": "https://github.com/example/repo/discussions/1",
-            "reactionGroups": [{"content": "THUMBS_UP", "users": {"totalCount": 4}}],
+            "upvoteCount": 4,
         }
         duplicate = {
             "id": "D_duplicate",
             "body": "<!-- skillpper-vote-skill: alpha -->",
             "url": "https://github.com/example/repo/discussions/2",
-            "reactionGroups": [{"content": "THUMBS_UP", "users": {"totalCount": 99}}],
+            "upvoteCount": 99,
         }
 
         discussions = canonical_discussions(
@@ -91,14 +86,14 @@ class SkillVotesTests(unittest.TestCase):
             {"D_official": official, "D_duplicate": duplicate},
         )
 
-        self.assertEqual(thumbs_up_count(discussions["alpha"]), 4)
+        self.assertEqual(upvote_count(discussions["alpha"]), 4)
 
     def test_canonical_discussions_does_not_accept_preclaimed_marker(self):
         preclaim = {
             "id": "D_preclaim",
             "body": "<!-- skillpper-vote-skill: alpha -->",
             "url": "https://github.com/example/repo/discussions/2",
-            "reactionGroups": [{"content": "THUMBS_UP", "users": {"totalCount": 99}}],
+            "upvoteCount": 99,
         }
 
         discussions = canonical_discussions(

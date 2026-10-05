@@ -1,6 +1,6 @@
 # Community Skill Ranking
 
-This ranking is generated from GitHub Discussion `:+1:` reactions.
+This ranking is generated from GitHub Discussion upvotes.
 Vote discussions live in the `Skill Votes` discussion category.
 
 | Rank | Skill | Votes | Discussion |

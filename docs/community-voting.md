@@ -1,6 +1,6 @@
 # Community Voting
 
-Skillpper can use GitHub Discussions as a low-friction voting surface for skills. Community members vote by reacting with `:+1:` to one discussion per skill, and a scheduled workflow generates `RANKING.md` plus the GitHub Pages dashboard data.
+Skillpper can use GitHub Discussions as a low-friction voting surface for skills. Community members vote by upvoting one discussion per skill, and a scheduled workflow generates `RANKING.md` plus the GitHub Pages dashboard data.
 
 For the full post-merge setup checklist, see [Community Voting Rollout](community-voting-rollout.md).
 
@@ -12,7 +12,7 @@ For the full post-merge setup checklist, see [Community Voting Rollout](communit
 4. Run **Actions -> Update skill votes -> Run workflow** with `sync_discussions` enabled.
 5. Enable GitHub Pages from the default branch's `/docs` folder.
 
-The first manual run creates one vote discussion for each root-level skill and records its discussion ID in `docs/vote-discussions.json`. Later scheduled runs create any missing vote discussions and update `RANKING.md` and `docs/votes.json` from the current reaction counts every five minutes, offset from exact five-minute boundaries to reduce GitHub Actions schedule delays.
+The first manual run creates one vote discussion for each root-level skill and records its discussion ID in `docs/vote-discussions.json`. Later scheduled runs create any missing vote discussions and update `RANKING.md` and `docs/votes.json` from the current upvote counts every five minutes, offset from exact five-minute boundaries to reduce GitHub Actions schedule delays.
 
 ## How voting works
 
@@ -22,7 +22,7 @@ Each generated discussion includes a hidden marker:
 <!-- skillpper-vote-skill: design-craft -->
 ```
 
-The ranking script uses that marker only on registered discussions created by the workflow. The trusted skill-to-discussion mapping lives in `docs/vote-discussions.json`, so copied markers in community-created discussions are ignored. It counts only `:+1:` reactions on the registered discussion itself.
+The ranking script uses that marker only on registered discussions created by the workflow. The trusted skill-to-discussion mapping lives in `docs/vote-discussions.json`, so copied markers in community-created discussions are ignored. It counts only upvotes on the registered discussion itself.
 
 ## Permissions
 
@@ -41,4 +41,4 @@ Without GitHub credentials, this command generates a zero-vote local preview:
 python scripts/update_skill_votes.py
 ```
 
-Inside GitHub Actions, the same script reads `GH_TOKEN` and `GITHUB_REPOSITORY`, fetches discussion reactions through GitHub GraphQL, and updates the ranking.
+Inside GitHub Actions, the same script reads `GH_TOKEN` and `GITHUB_REPOSITORY`, fetches discussion upvotes through GitHub GraphQL, and updates the ranking.

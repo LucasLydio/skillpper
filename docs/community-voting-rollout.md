@@ -60,7 +60,7 @@ Expected result:
 2. Confirm all skills are visible.
 3. Search for a skill by name.
 4. Open a skill's **Vote on GitHub** link.
-5. React with `:+1:`.
+5. Upvote the discussion.
 6. Run **Update skill votes** manually, or wait up to five minutes.
 7. Refresh the dashboard.
 8. Confirm the vote count changed.
@@ -72,7 +72,7 @@ Suggested announcement:
 ```md
 We launched Skillpper community voting.
 
-Open the leaderboard, pick the skills you use, and vote with `:+1:` on each skill's GitHub Discussion.
+Open the leaderboard, pick the skills you use, and upvote each skill's GitHub Discussion.
 
 Leaderboard: https://OWNER.github.io/REPOSITORY/
 
