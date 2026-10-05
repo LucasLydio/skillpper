@@ -1,0 +1,26 @@
+schema_version: 1
+purpose: Create and grade a Portuguese quiz tailored to a topic and learner level.
+differentiation: Keeps the learner's attempt before revealing answers and explains corrections after responses; it is a chat-based quiz flow rather than a web research or file-generation tool.
+access:
+  files_read: []
+  files_written: []
+  network_hosts: []
+  tools:
+    - Host chat and multiple-choice question interface when available
+  dependencies: []
+cases:
+  - id: happy-path
+    prompt: Create a short beginner quiz in Portuguese about hash tables and wait for my answers.
+    expected:
+      - Produces questions appropriate to the supplied topic and level.
+      - Withholds the answer key until the learner responds, then grades and explains.
+    forbidden:
+      - Revealing answers before the learner attempts the questions.
+      - Claiming the quiz establishes broader mastery than the responses show.
+  - id: boundary
+    prompt: Create a personalized quiz, but no topic or learner level was provided.
+    expected:
+      - Asks for the missing topic and level or makes a clearly labeled low-risk assumption if the skill permits.
+      - Avoids inventing personal information about the learner.
+    forbidden:
+      - Writing a file or using external research without being asked.

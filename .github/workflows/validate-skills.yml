@@ -1,0 +1,102 @@
+name: Skill validation
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review, edited]
+
+permissions:
+  contents: read
+
+jobs:
+  skill-validation:
+    name: skill-validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      BASE_SHA: ${{ github.event.pull_request.base.sha }}
+      CANDIDATE_SHA: ${{ github.sha }}
+      PR_NUMBER: ${{ github.event.pull_request.number }}
+    steps:
+      - name: Check out trusted base
+        uses: actions/checkout@v7
+        with:
+          repository: kipperacademy/skillpper
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: trusted
+          fetch-depth: 1
+          persist-credentials: false
+          submodules: false
+          lfs: false
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+
+      - name: Install trusted validator dependency
+        env:
+          PIP_NO_CACHE_DIR: '1'
+        run: >-
+          python -m pip install --disable-pip-version-check --require-hashes
+          --only-binary=:all: -r trusted/scripts/requirements-validation.txt
+
+      - name: Fetch and verify pull request merge ref
+        run: |
+          case "$PR_NUMBER" in
+            ''|*[!0-9]*) echo "Invalid pull request number." >&2; exit 2 ;;
+          esac
+          git -C trusted fetch --no-tags https://github.com/kipperacademy/skillpper.git "refs/pull/$PR_NUMBER/merge"
+          test "$(git -C trusted rev-parse FETCH_HEAD)" = "$CANDIDATE_SHA"
+
+      - name: Run trusted base validator
+        run: >-
+          python -I trusted/scripts/validate_skills.py --repo trusted
+          --base-sha "$BASE_SHA" --candidate-sha "$CANDIDATE_SHA"
+          --json "$RUNNER_TEMP/skill-report.json"
+          --markdown "$RUNNER_TEMP/skill-report.md"
+
+      - name: Add redacted report to step summary
+        if: always()
+        env:
+          REPORT_PATH: ${{ runner.temp }}/skill-report.md
+        run: |
+          if [ -f "$REPORT_PATH" ]; then
+            cat -- "$REPORT_PATH" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload validation reports
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: skill-validation-report
+          path: |
+            ${{ runner.temp }}/skill-report.json
+            ${{ runner.temp }}/skill-report.md
+          if-no-files-found: error
+          retention-days: 7
+
+  validator-tests:
+    name: validator-tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out pull request candidate
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+          submodules: false
+          lfs: false
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+
+      - name: Install candidate test dependencies
+        env:
+          PIP_NO_CACHE_DIR: '1'
+        run: python -m pip install --disable-pip-version-check -r scripts/requirements.txt
+
+      - name: Run validator regression tests
+        run: python -m unittest discover -s tests -v

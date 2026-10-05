@@ -1,0 +1,5 @@
+schema_version: 1
+maintainers:
+  - Fernanda-Kipper
+limits:
+  max_window_lines: 20
