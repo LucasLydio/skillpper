@@ -123,13 +123,15 @@ class SkillValidationInputTests(unittest.TestCase):
             read_tree(self.repo, sha, max_bytes=1024)
 
     def test_control_character_path_blocks_without_echoing_raw_name(self):
-        self.git("config", "core.quotePath", "false")
-        path = self.repo / "alpha" / "bad\nname.md"
-        path.parent.mkdir()
-        path.write_bytes(b"secret-ish data")
-        self.git("add", "--all")
-        self.git("commit", "-qm", "control path")
-        sha = self.git("rev-parse", "HEAD").decode().strip()
+        # Git permits LF in a path, but Windows does not permit creating such
+        # a worktree file. Construct the tree object directly so this tests
+        # the same hostile input on every platform without a skip.
+        blob = self.git("hash-object", "-w", "--stdin", input=b"secret-ish data").strip()
+        tree = self.git(
+            "mktree", "-z",
+            input=b"100644 blob " + blob + b"\tbad\nname.md\0",
+        ).strip()
+        sha = self.git("commit-tree", tree, "-m", "control path").decode().strip()
 
         with self.assertRaises(InputError) as raised:
             read_tree(self.repo, sha, max_bytes=1024)

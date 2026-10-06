@@ -22,6 +22,10 @@ class CLITests(unittest.TestCase):
         shutil.copytree(ROOT / 'security', self.repo / 'security')
         (self.repo / 'README.md').write_text('A harmless project.\n')
         self.git('init', '-q')
+        # Keep the trusted base checkout byte-identical to Git blobs on
+        # Windows, where global autocrlf settings otherwise rewrite files.
+        self.git('config', 'core.autocrlf', 'false')
+        self.git('config', 'core.eol', 'lf')
         self.git('add', '.')
         self.git('-c', 'user.name=Test', '-c', 'user.email=test@example.invalid',
                  '-c', 'commit.gpgsign=false', 'commit', '-qm', 'trusted scanner')

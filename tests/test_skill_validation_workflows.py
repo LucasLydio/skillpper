@@ -1,5 +1,6 @@
 from pathlib import Path
 import os
+import json
 import re
 import subprocess
 import tempfile
@@ -76,6 +77,28 @@ class WorkflowContractTests(unittest.TestCase):
         self.assertIn("--require-hashes", script)
         self.assertIn("--only-binary=:all:", script)
         self.assertNotRegex(script, r"\$\{\{\s*github\.event\.pull_request\.(?:title|head\.ref)")
+
+    @unittest.skipIf(os.name == "nt", "bootstrap shell runs on the Ubuntu scanner")
+    def test_missing_base_validator_fails_with_explicit_bootstrap_report(self):
+        workflow = load_workflow("validate-skills.yml")
+        step = next(step for step in workflow["jobs"]["skill-validation"]["steps"]
+                    if step.get("name") == "Verify trusted validator is available")
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            env = dict(os.environ, RUNNER_TEMP=directory)
+            result = subprocess.run(["bash", "-e", "-c", step["run"]], cwd=root,
+                                    env=env, capture_output=True, timeout=10)
+            self.assertEqual(result.returncode, 2)
+            report = json.loads((root / "skill-report.json").read_text())
+            self.assertFalse(report["complete"])
+            self.assertEqual(report["reason"], "trusted_base_validator_missing")
+            trusted = root / "trusted/scripts"
+            trusted.mkdir(parents=True)
+            for name in ("validate_skills.py", "requirements-validation.txt"):
+                (trusted / name).write_text("")
+            result = subprocess.run(["bash", "-e", "-c", step["run"]], cwd=root,
+                                    env=env, capture_output=True, timeout=10)
+            self.assertEqual(result.returncode, 0)
 
     def test_reports_are_summarized_and_only_explicit_files_are_uploaded(self):
         workflow = load_workflow("validate-skills.yml")

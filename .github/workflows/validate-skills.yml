@@ -28,6 +28,15 @@ jobs:
           submodules: false
           lfs: false
 
+      - name: Verify trusted validator is available
+        run: |
+          if [ ! -f trusted/scripts/validate_skills.py ] || [ ! -f trusted/scripts/requirements-validation.txt ]; then
+            printf '%s\n' '# Skill validation incomplete' '' 'The base revision has no validator yet. This bootstrap PR requires manual owner review and passing candidate tests. No candidate scanner fallback is permitted.' > "$RUNNER_TEMP/skill-report.md"
+            printf '%s\n' '{"complete":false,"exit_code":2,"reason":"trusted_base_validator_missing"}' > "$RUNNER_TEMP/skill-report.json"
+            echo 'Trusted base validator missing: bootstrap review required.' >&2
+            exit 2
+          fi
+
       - name: Set up Python 3.12
         uses: actions/setup-python@v7
         with:
