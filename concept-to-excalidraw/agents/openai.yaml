@@ -1,0 +1,4 @@
+interface:
+  display_name: "Conceito → Excalidraw"
+  short_description: "Conceitos em diagramas e boards editáveis no Excalidraw"
+  default_prompt: "Use $concept-to-excalidraw para explicar este conceito visualmente e entregar um arquivo .excalidraw editável, seguindo as referências fornecidas. Organize como board ou slides conforme o pedido."
