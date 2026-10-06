@@ -1,0 +1,4 @@
+interface:
+  display_name: "Preparar Slides Técnicos"
+  short_description: "Pesquisa, didática e slides técnicos com Excalidraw"
+  default_prompt: "Use $prepare-technical-slides para pesquisar e estruturar esta aula com fontes e contexto, usando concept-to-excalidraw para criar os diagramas e slides nativos."

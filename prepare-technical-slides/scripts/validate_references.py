@@ -39,7 +39,6 @@ CITATION_GROUP = re.compile(r"\[((?:S\d{2,})(?:\s*,\s*S\d{2,})*)\]")
 REFERENCE = re.compile(r"^\s*-\s*\[(S\d{2,})\]\s+.+$", re.MULTILINE)
 URL = re.compile(r"https?://[^\s)>]+")
 NO_TECHNICAL_CLAIM = "[sem-afirmacao-tecnica]"
-GAMMA_TEMPLATE_ID = "nkhgcucv1lw00wc"
 
 
 def normalize_host(url: str) -> str:
@@ -73,15 +72,6 @@ def validate(path: Path) -> list[str]:
 
     if not headings:
         return ["Nenhum slide encontrado. Use títulos no formato '## Slide NN — Título'."]
-    if not re.search(
-        rf"^\s*-\s*Template Gamma:\s*{re.escape(GAMMA_TEMPLATE_ID)}\s*$",
-        text,
-        re.IGNORECASE | re.MULTILINE,
-    ):
-        errors.append(
-            "O blueprint deve declarar o template Gamma obrigatório: "
-            f"'- Template Gamma: {GAMMA_TEMPLATE_ID}'."
-        )
     if not final_match:
         return [
             "Falta o último slide '## Slide final — Referências bibliográficas'. "
