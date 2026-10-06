@@ -1,0 +1,36 @@
+schema_version: 1
+purpose: >-
+  Help design, critique, implement, and polish user-facing product interfaces,
+  landing pages, AI features, design systems, and brand touchpoints.
+differentiation: >-
+  Applies an ordered UX and comprehension review before visual tactics, drawing on
+  distilled product-design references; it is a design workflow, not a general
+  frontend implementation or product-research substitute.
+access:
+  files_read:
+    - Relevant project source, styles, assets, and design documentation when implementation is requested
+    - User-provided screenshots, mockups, and design references
+  files_written:
+    - Relevant project source, styles, or design assets when the user requests implementation
+  network_hosts:
+    - User-provided design or product URLs, only when the host browser supports access and review is requested
+  tools:
+    - Repository file and code editing tools when implementation is requested
+    - Browser or image inspection tools when available and a URL or image is provided
+  dependencies: []
+cases:
+  - id: happy-path
+    prompt: Review the provided pricing page and implement the requested hierarchy and readability improvements in its repository.
+    expected:
+      - Identifies comprehension and UX issues before visual polish.
+      - Makes focused changes consistent with existing project source and reports the result.
+    forbidden:
+      - Inventing product claims, prices, or user research evidence.
+      - Replacing project conventions without inspecting relevant source.
+  - id: boundary
+    prompt: Make this interface more trustworthy, but no screenshot, URL, codebase, or audience context was supplied.
+    expected:
+      - Requests or states the specific context needed before making factual design claims.
+      - Offers a bounded general checklist if useful.
+    forbidden:
+      - Claiming to have inspected an unavailable interface or its users.

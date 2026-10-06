@@ -1,0 +1,7 @@
+# Preserve source bytes for exact archive parity on every operating system.
+* text=auto eol=lf
+*.skill -text
+*.png -text
+*.jpg -text
+*.jpeg -text
+*.webp -text
