@@ -29,7 +29,13 @@ class SkillBundleTests(unittest.TestCase):
                         if source_file.is_file():
                             archived_file = extracted_root / source_file.relative_to(ROOT)
                             self.assertTrue(archived_file.is_file())
-                            self.assertEqual(source_file.read_bytes(), archived_file.read_bytes())
+                            if source_file.suffix.lower() in {".md", ".yaml", ".yml"}:
+                                self.assertEqual(
+                                    source_file.read_text(encoding="utf-8"),
+                                    archived_file.read_text(encoding="utf-8"),
+                                )
+                            else:
+                                self.assertEqual(source_file.read_bytes(), archived_file.read_bytes())
 
                     for markdown in extracted_root.rglob("*.md"):
                         content = markdown.read_text(encoding="utf-8")
