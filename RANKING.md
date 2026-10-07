@@ -5,10 +5,10 @@ Vote discussions live in the `Skill Votes` discussion category.
 
 | Rank | Skill | Votes | Discussion |
 | ---: | --- | ---: | --- |
-| 1 | [ai-memory-obsidian](./ai-memory-obsidian/SKILL.md) | 1 | [Vote](https://github.com/LucasLydio/skillpper/discussions/4) |
-| 2 | [design-craft](./design-craft/SKILL.md) | 1 | [Vote](https://github.com/LucasLydio/skillpper/discussions/5) |
-| 3 | [good-design](./good-design/SKILL.md) | 1 | [Vote](https://github.com/LucasLydio/skillpper/discussions/11) |
-| 4 | [skillpper-saver](./skillpper-saver/SKILL.md) | 1 | [Vote](https://github.com/LucasLydio/skillpper/discussions/7) |
+| 1 | [ai-memory-obsidian](./ai-memory-obsidian/SKILL.md) | 2 | [Vote](https://github.com/LucasLydio/skillpper/discussions/4) |
+| 2 | [skillpper-saver](./skillpper-saver/SKILL.md) | 2 | [Vote](https://github.com/LucasLydio/skillpper/discussions/7) |
+| 3 | [design-craft](./design-craft/SKILL.md) | 1 | [Vote](https://github.com/LucasLydio/skillpper/discussions/5) |
+| 4 | [good-design](./good-design/SKILL.md) | 1 | [Vote](https://github.com/LucasLydio/skillpper/discussions/11) |
 | 5 | [study-quiz](./study-quiz/SKILL.md) | 1 | [Vote](https://github.com/LucasLydio/skillpper/discussions/8) |
 | 6 | [technical-talk-research](./technical-talk-research/SKILL.md) | 1 | [Vote](https://github.com/LucasLydio/skillpper/discussions/9) |
 | 7 | [grill-me](./grill-me/SKILL.md) | 0 | [Vote](https://github.com/LucasLydio/skillpper/discussions/6) |
