@@ -1,12 +1,12 @@
 const agents = [
-  { name: 'Claude Code', icon: 'claude' },
+  { name: 'Claude Code', icon: 'claude-color' },
   { name: 'OpenAI Codex', icon: 'openai' },
-  { name: 'Cursor', icon: 'cursor' },
-  { name: 'Gemini CLI', icon: 'google' },
-  { name: 'Windsurf', icon: 'windsurf' },
-  { name: 'DeepSeek', icon: 'deepseek' },
-  { name: 'Perplexity', icon: 'perplexity' },
-  { name: 'Ollama', icon: 'ollama' },
+  { name: 'GitHub Copilot', icon: 'github-copilot' }, // Uses its standard colored SVG
+  { name: 'Cursor', icon: 'cursor' }, // Multi-color by default
+  { name: 'Gemini CLI', icon: 'google-color' }, // Uses Google's multi-color logo
+  { name: 'Windsurf', icon: 'windsurf' }, // Multi-color by default
+  { name: 'DeepSeek', icon: 'deepseek-color' },
+  { name: 'Mistral', icon: 'mistral-color' },
 ];
 
 const agentTrack = document.querySelector('#agentTrack');
@@ -27,7 +27,7 @@ function createAgentGroup(isDuplicate = false) {
     item.setAttribute('role', 'listitem');
 
     const icon = document.createElement('img');
-    icon.src = `https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/${agent.icon}.svg`;
+    icon.src = `https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@latest/icons/${agent.icon}.svg`;
     icon.alt = '';
     icon.loading = 'lazy';
     icon.addEventListener('error', () => icon.remove());
