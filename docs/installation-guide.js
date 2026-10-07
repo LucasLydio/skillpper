@@ -3,7 +3,7 @@ const agents = [
   { name: 'OpenAI Codex', icon: 'openai' },
   { name: 'GitHub Copilot', icon: 'github-copilot' }, // Uses its standard colored SVG
   { name: 'Cursor', icon: 'cursor' }, // Multi-color by default
-  { name: 'Gemini CLI', icon: 'google-color' }, // Uses Google's multi-color logo
+  { name: 'Gemini CLI', icon: 'gemini-color' }, // Uses Google's multi-color logo
   { name: 'Windsurf', icon: 'windsurf' }, // Multi-color by default
   { name: 'DeepSeek', icon: 'deepseek-color' },
   { name: 'Mistral', icon: 'mistral-color' },
