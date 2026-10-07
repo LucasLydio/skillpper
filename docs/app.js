@@ -10,7 +10,6 @@ const template = document.querySelector("#skillCardTemplate");
 const totalVotes = document.querySelector("#totalVotes");
 const totalSkills = document.querySelector("#totalSkills");
 const updatedAt = document.querySelector("#updatedAt");
-const syncButton = document.querySelector("#syncButton");
 const repositoryLink = document.querySelector("#repositoryLink");
 
 function inferRepositoryFromPagesUrl() {
@@ -18,10 +17,6 @@ function inferRepositoryFromPagesUrl() {
   const owner = host.endsWith(".github.io") ? host.replace(".github.io", "") : "";
   const repo = window.location.pathname.split("/").filter(Boolean)[0] || "";
   return owner && repo ? `${owner}/${repo}` : null;
-}
-
-function workflowUrl(repository) {
-  return `https://github.com/${repository}/actions/workflows/update-skill-votes.yml`;
 }
 
 function repositoryUrl(repository) {
@@ -52,10 +47,6 @@ function voteLabel(count) {
 
 function configureLinks(repository) {
   if (!repository) return;
-  syncButton.href = workflowUrl(repository);
-  syncButton.removeAttribute("aria-disabled");
-  syncButton.title = "Requires write access to the repository";
-
   repositoryLink.href = repositoryUrl(repository);
   repositoryLink.hidden = false;
 }

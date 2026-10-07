@@ -10,7 +10,6 @@
   --shadow-sm: 0 1px 2px rgba(61, 35, 24, 0.08);
   --shadow-md: 0 10px 24px rgba(61, 35, 24, 0.1);
   --shadow-lg: 0 24px 60px rgba(61, 35, 24, 0.16);
-  --shadow-xlg: 0 32px 80px rgba(61, 35, 24, 0.22);
   --font-sm: 0.875rem;
   --font-md: 1rem;
   --font-lg: 1.25rem;
@@ -87,7 +86,6 @@ input:focus-visible {
 }
 
 .brand,
-.topbar-actions,
 .skill-actions,
 .skill-title-row {
   display: flex;
@@ -107,10 +105,6 @@ input:focus-visible {
   border-radius: 50%;
   object-fit: cover;
   box-shadow: var(--shadow-sm);
-}
-
-.topbar-actions {
-  gap: var(--space-md);
 }
 
 .button,
@@ -135,10 +129,6 @@ input:focus-visible {
 .button:hover {
   transform: translateY(-1px);
   box-shadow: var(--shadow-lg);
-}
-
-.button-secondary {
-  background: var(--brand-medium);
 }
 
 .button[aria-disabled="true"] {
@@ -388,11 +378,6 @@ h3 {
   .topbar {
     align-items: flex-start;
     flex-direction: column;
-  }
-
-  .topbar-actions {
-    width: 100%;
-    justify-content: space-between;
   }
 
   .hero {

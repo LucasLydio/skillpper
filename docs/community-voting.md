@@ -1,6 +1,6 @@
 # Community Voting
 
-Skillpper can use GitHub Discussions as a low-friction voting surface for skills. Community members vote by upvoting one discussion per skill, and a scheduled workflow generates `RANKING.md` plus the GitHub Pages dashboard data.
+Skillpper can use GitHub Discussions as a low-friction voting surface for skills. Community members vote by upvoting one discussion per skill, and a workflow triggered through GitHub's API generates `RANKING.md` plus the GitHub Pages dashboard data.
 
 For the full post-merge setup checklist, see [Community Voting Rollout](community-voting-rollout.md).
 
@@ -11,8 +11,9 @@ For the full post-merge setup checklist, see [Community Voting Rollout](communit
 3. Merge the voting workflow.
 4. Run **Actions -> Update skill votes -> Run workflow** with `sync_discussions` enabled.
 5. Enable GitHub Pages from the default branch's `/docs` folder.
+6. Configure a Cronitor HTTP Check to dispatch the workflow every five minutes, as described in [Community Voting Rollout](community-voting-rollout.md).
 
-The first manual run creates one vote discussion for each root-level skill and records its discussion ID in `docs/vote-discussions.json`. Later scheduled runs create any missing vote discussions and update `RANKING.md` and `docs/votes.json` from the current upvote counts every five minutes, offset from exact five-minute boundaries to reduce GitHub Actions schedule delays.
+The first manual run creates one vote discussion for each root-level skill and records its discussion ID in `docs/vote-discussions.json`. Later Cronitor-triggered runs create any missing vote discussions and update `RANKING.md` and `docs/votes.json` from the current upvote counts. GitHub's own schedule trigger is not used.
 
 ## How voting works
 
@@ -30,6 +31,8 @@ The workflow requests:
 
 - `discussions: write` to create missing vote discussions during sync runs.
 - `contents: write` to commit generated `RANKING.md`, `docs/votes.json`, and `docs/vote-discussions.json` updates.
+
+Cronitor uses the same dispatch API for automatic runs. Its repository-scoped token is configured once in Cronitor and is never sent to dashboard visitors.
 
 Forked pull requests normally cannot create discussions in the upstream repository. This is expected. The automation starts working after maintainers merge it and run it from the upstream repository.
 

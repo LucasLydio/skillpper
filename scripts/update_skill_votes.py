@@ -302,11 +302,18 @@ def ranked_rows(skills: dict[str, str], discussions: dict[str, dict]) -> list[di
     return rows
 
 
-def dashboard_data(skills: dict[str, str], discussions: dict[str, dict], category_name: str, repository: str | None) -> dict:
+def dashboard_data(
+    skills: dict[str, str],
+    discussions: dict[str, dict],
+    category_name: str,
+    repository: str | None,
+    default_branch: str | None = None,
+) -> dict:
     rows = ranked_rows(skills, discussions)
     return {
         "updated_at": datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z"),
         "repository": repository,
+        "default_branch": default_branch,
         "category": category_name,
         "total_skills": len(rows),
         "total_votes": sum(row["votes"] for row in rows),
@@ -366,9 +373,10 @@ def main() -> int:
         skills = read_skill_metadata(ROOT)
         token = os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN")
         repository = os.environ.get("GITHUB_REPOSITORY")
+        default_branch = os.environ.get("GITHUB_DEFAULT_BRANCH")
         if not token or not repository:
             content = render_ranking(skills, {}, args.category)
-            data = dashboard_data(skills, {}, args.category, repository)
+            data = dashboard_data(skills, {}, args.category, repository, default_branch)
             registry = read_discussion_registry()
             registry = {skill: registry[skill] for skill in sorted(skills) if skill in registry}
             return (
@@ -393,7 +401,7 @@ def main() -> int:
             print("Missing vote discussions: " + ", ".join(missing))
 
         content = render_ranking(skills, discussions, args.category)
-        data = dashboard_data(skills, discussions, args.category, repository)
+        data = dashboard_data(skills, discussions, args.category, repository, default_branch)
         return (
             write_ranking(content, args.check)
             or write_dashboard_data(data, args.check)

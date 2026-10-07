@@ -58,9 +58,11 @@ class SkillVotesTests(unittest.TestCase):
             },
             "Skill Votes",
             "example/repo",
+            "main",
         )
 
         self.assertEqual(data["repository"], "example/repo")
+        self.assertEqual(data["default_branch"], "main")
         self.assertEqual(data["total_skills"], 2)
         self.assertEqual(data["total_votes"], 2)
         self.assertEqual(data["skills"][0]["skill"], "beta")
