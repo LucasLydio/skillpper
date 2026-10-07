@@ -1,9 +1,10 @@
 {
-  "updated_at": "2026-10-05T23:25:48Z",
+  "updated_at": "2026-10-07T00:52:36Z",
   "repository": "LucasLydio/skillpper",
+  "default_branch": "main",
   "category": "Skill Votes",
   "total_skills": 7,
-  "total_votes": 4,
+  "total_votes": 6,
   "skills": [
     {
       "skill": "ai-memory-obsidian",
@@ -20,38 +21,38 @@
       "rank": 2
     },
     {
+      "skill": "good-design",
+      "description": "Design and audit product experiences for ethical conversion, activation, retention, and expansion using product and behavioral-design principles. Use for SaaS UX, landing pages, onboarding, dashboards, forms, pricing, and feature decisions—not for visual styling alone.",
+      "votes": 1,
+      "discussion_url": "https://github.com/LucasLydio/skillpper/discussions/11",
+      "rank": 3
+    },
+    {
       "skill": "skillpper-saver",
       "description": "Aggressive token, context, and cost optimization mode for AI coding agents (Claude Code, Antigravity, Cursor, etc.). Prevents marathon sessions, eliminates redundant file re-reading, prioritizes text extraction over screenshots in browser automation, and manages context windows with surgical cutoff triggers. Use when the user requests token savings, context optimization, quota conservation, or when starting extensive refactoring, browsing, or debugging tasks.",
       "votes": 1,
       "discussion_url": "https://github.com/LucasLydio/skillpper/discussions/7",
-      "rank": 3
+      "rank": 4
     },
     {
       "skill": "study-quiz",
       "description": "Use ao pedir quiz, teste, prova, simulado, questões de múltipla escolha, mini-desafio, gabarito, “me testa sobre X”, “gera um quiz de X” ou uma avaliação sobre um assunto, em um nível ou numa faixa de níveis. Use também quando o usuário responder um quiz gerado aqui e quiser a correção. Não use para palestras, slides, design, flashcards, resumo ou plano de estudo.",
       "votes": 1,
       "discussion_url": "https://github.com/LucasLydio/skillpper/discussions/8",
-      "rank": 4
+      "rank": 5
     },
     {
-      "skill": "good-design",
-      "description": "Design and audit product experiences for ethical conversion, activation, retention, and expansion using product and behavioral-design principles. Use for SaaS UX, landing pages, onboarding, dashboards, forms, pricing, and feature decisions—not for visual styling alone.",
-      "votes": 0,
-      "discussion_url": "https://github.com/LucasLydio/skillpper/discussions/11",
-      "rank": 5
+      "skill": "technical-talk-research",
+      "description": "Pesquisa e estrutura palestras técnicas em PT-BR com fontes atuais e verificáveis. Use ao pedir referências para uma explicação técnica, levantamento de artigos ou posts recentes, curadoria de fontes, roteiro ou slides de palestra, ou revisão da bibliografia de uma apresentação. Pesquisa somente no catálogo de fontes aprovado, mantém rastreabilidade de cada afirmação técnica e exige um slide final de Referências bibliográficas. Cria apresentações exclusivamente pelo MCP da Gamma, usando o template `nkhgcucv1lw00wc`.",
+      "votes": 1,
+      "discussion_url": "https://github.com/LucasLydio/skillpper/discussions/9",
+      "rank": 6
     },
     {
       "skill": "grill-me",
       "description": "Interview the user to clarify requirements, architecture, design, and business rules before implementation. Use the host's available interactive question interface and ask in rounds sized to its limits. Works across macOS, Linux, and Windows. Use when the user asks to grill an idea, plan a major feature, or invokes /grill-me.",
       "votes": 0,
       "discussion_url": "https://github.com/LucasLydio/skillpper/discussions/6",
-      "rank": 6
-    },
-    {
-      "skill": "technical-talk-research",
-      "description": "Pesquisa e estrutura palestras técnicas em PT-BR com fontes atuais e verificáveis. Use ao pedir referências para uma explicação técnica, levantamento de artigos ou posts recentes, curadoria de fontes, roteiro ou slides de palestra, ou revisão da bibliografia de uma apresentação. Pesquisa somente no catálogo de fontes aprovado, mantém rastreabilidade de cada afirmação técnica e exige um slide final de Referências bibliográficas. Cria apresentações exclusivamente pelo MCP da Gamma, usando o template `nkhgcucv1lw00wc`.",
-      "votes": 0,
-      "discussion_url": "https://github.com/LucasLydio/skillpper/discussions/9",
       "rank": 7
     }
   ]
