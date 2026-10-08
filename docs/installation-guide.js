@@ -69,10 +69,12 @@ async function copyCommand() {
     }
   }
 
+  const svgIcon = copyButton.querySelector('svg');
+
   copyButton.textContent = 'Copied';
   copyStatus.textContent = 'Installation command copied.';
   window.setTimeout(() => {
-    copyButton.textContent = 'Copy';
+    copyButton.replaceChildren(svgIcon);
     copyStatus.textContent = '';
   }, 1800);
 }
