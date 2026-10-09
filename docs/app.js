@@ -146,7 +146,7 @@ async function loadVotes() {
 
     totalVotes.textContent = data.total_votes ?? 0;
     totalSkills.textContent = data.total_skills ?? state.skills.length;
-    updatedAt.textContent = formatDate(data.updated_at);
+    updatedAt.textContent = '';
     configureLinks(state.repository);
     renderSkills(state.skills);
   } catch (error) {

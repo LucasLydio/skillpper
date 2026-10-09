@@ -60,8 +60,8 @@ body {
     var(--bg-lighter);
   color: var(--color-dark);
   font-family:
-  "IBM Plex Sans",
   "MontSerrat",
+  "IBM Plex Sans",
     Inter,
     ui-sans-serif,
     system-ui,
@@ -112,16 +112,15 @@ input:focus-visible {
 .brand {
   gap: 0.7rem;
   color: var(--color-dark);
-  font-weight: 800;
+  font-weight: 600;
   text-decoration: none;
 }
 
 .brand img {
-  width: 2.75rem;
-  height: 2.75rem;
+  width: 3.75rem;
+  height: 3.75rem;
   border-radius: 50%;
   object-fit: cover;
-  box-shadow: var(--shadow-sm);
 }
 
 .button,
@@ -129,6 +128,7 @@ input:focus-visible {
   min-height: 2.75rem;
   border-radius: var(--radius-xlg);
   font-weight: 800;
+  font-size: var(--font-sm);
   transition:
     transform var(--transition-fast),
     box-shadow var(--transition-fast),
@@ -172,14 +172,14 @@ input:focus-visible {
   grid-template-columns: minmax(0, 1fr) minmax(18rem, 24rem);
   gap: var(--space-xlg);
   align-items: end;
-  padding: clamp(2rem, 8vw, 5rem) 0 var(--space-xlg);
+  padding: clamp(2rem, 8vw, 1rem) 0 var(--space-xlg);
 }
 
 .eyebrow {
   margin: 0 0 var(--space-sm);
   color: var(--brand-dark);
   font-size: var(--font-sm);
-  font-weight: 900;
+  font-weight: 600;
   letter-spacing: 0;
   text-transform: uppercase;
 }
@@ -192,7 +192,7 @@ p {
 }
 
 h1 {
-  max-width: 11ch;
+  max-width: 10ch;
   color: var(--color-dark);
   font-size: var(--font-xlg);
   line-height: 0.95;
@@ -208,22 +208,21 @@ h1 {
 
 .hero-panel {
   display: grid;
-  grid-template-columns: 6.5rem 1fr;
+  grid-template-columns: 11.5rem 1fr;
   gap: var(--space-md);
   align-items: center;
   padding: var(--space-lg);
-  border: 1px solid rgba(150, 63, 21, 0.14);
+  /* border: 1px solid rgba(150, 63, 21, 0.14); */
   border-radius: var(--radius-lg);
-  background: rgba(255, 250, 244, 0.82);
-  box-shadow: var(--shadow-lg);
-  backdrop-filter: blur(16px);
+  background: transparent;
+  /* box-shadow: var(--shadow-sm); */
   max-width: 22rem;
 }
 
 .hero-logo {
   grid-row: span 2;
-  width: 6.5rem;
-  height: 6.5rem;
+  width: 11.5rem;
+  height: 11.5rem;
   border-radius: 1.5rem;
   object-fit: cover;
 }
@@ -247,14 +246,12 @@ h1 {
   grid-template-columns: minmax(0, 0.9fr) minmax(20rem, 1.1fr);
   gap: var(--space-lg) var(--space-xlg);
   align-items: center;
-  margin: 0 0 var(--space-xlg);
-  padding: var(--space-xlg) 0;
+  margin-block: var(--space-xlg);
+  padding-block: var(--space-xlg) 0;
   border-top: 1px solid var(--border-light);
   border-bottom: 1px solid var(--border-light);
 }
 
-.install-intro h2 {
-}
 
 .install-intro > p:last-child {
   max-width: 34rem;
@@ -337,6 +334,7 @@ h1 {
 .agent-strip {
   grid-column: 1 / -1;
   min-width: 0;
+  margin-block: var(--space-md);
 }
 
 .agent-strip-label {
@@ -411,7 +409,7 @@ h1 {
   display: flex;
   min-width: 100%;
   justify-content: space-between;
-  align-items: start;
+  align-items: first baseline;
   flex-wrap: wrap;
 }
 
@@ -434,7 +432,6 @@ h1 {
 
 .search-field {
   width: min(100%, 30.5rem);
-  min-height: 2.2rem;
 }
 
 .search-field span {
@@ -650,21 +647,10 @@ h3 {
 
   .topbar {
     align-items: flex-start;
-    flex-direction: column;
   }
 
   .hero {
     padding-top: var(--space-lg);
-  }
-
-  .hero-panel {
-    grid-template-columns: 5rem 1fr;
-    box-shadow: none;
-  }
-
-  .hero-logo {
-    width: 5rem;
-    height: 5rem;
   }
 
   .updated {
@@ -692,28 +678,23 @@ h3 {
     }
   }
 
-  .text-link {
-    display: none;
-  }
-
   .hero {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: var(--space-md);
   }
 
   .hero-copy {
     display: flex;
     flex-direction: column;
-    align-items: center;
     min-width: 100%;
-    text-align: center;
+    text-align: left;
   }
 
   .hero-panel {
     max-width: max-content;
-    grid-template-columns: 5rem 1fr;
     box-shadow: var(--shadow-sm);
   }
 
@@ -733,11 +714,6 @@ h3 {
   .skill-title-row {
     align-items: flex-start;
     flex-direction: column;
-  }
-
-  .skill-actions .button,
-  .skill-actions .text-link {
-    width: 100%;
   }
 
   .install-command {

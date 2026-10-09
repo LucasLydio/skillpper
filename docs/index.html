@@ -18,7 +18,7 @@
       <nav class="topbar" aria-label="Primary">
         <a class="brand" href="./">
           <img src="logo.webp" alt="" width="44" height="44" />
-          <span>Skillpper Community</span>
+          <span></span>
         </a>
         <a class="text-link" id="repositoryLink" href="#" hidden>Repository</a>
       </nav>
@@ -33,7 +33,7 @@
           </p>
         </div>
         <div class="hero-panel" aria-label="Ranking summary">
-          <img class="hero-logo" src="logo.webp" alt="Skillpper mascot" />
+          <img class="hero-logo" src="logbg.webp" alt="Skillpper mascot" />
           <div>
             <span class="summary-label">Total votes</span>
             <strong id="totalVotes">0</strong>
@@ -44,6 +44,19 @@
           </div>
         </div>
       </section>
+
+        <div class="agent-strip">
+          <p class="agent-strip-label">Works with your favorite agent</p>
+          <div
+            class="agent-marquee"
+            id="agentMarquee"
+            role="region"
+            aria-label="Compatible coding agents"
+            tabindex="0"
+          >
+            <div class="agent-track" id="agentTrack"></div>
+          </div>
+        </div>
     </header>
 
     <main class="page-shell">
@@ -122,19 +135,6 @@
             </div>
           </li>
         </ol>
-
-        <div class="agent-strip">
-          <p class="agent-strip-label">Works with your favorite agent</p>
-          <div
-            class="agent-marquee"
-            id="agentMarquee"
-            role="region"
-            aria-label="Compatible coding agents"
-            tabindex="0"
-          >
-            <div class="agent-track" id="agentTrack"></div>
-          </div>
-        </div>
       </section>
 
       <div class="middle-ui">
@@ -156,8 +156,7 @@
 
       <section class="contributors" aria-labelledby="contributorsTitle">
         <div class="contributors-heading">
-          <h2 id="contributorsTitle">Contributors</h2>
-          <a class="text-link contributors-all" id="contributorsAll" href="#" hidden>View all on GitHub</a>
+          <a class="text-link contributors-all" id="contributorsAll" href="#" >Contributors</a>
         </div>
         <ul class="avatars" id="contributors"></ul>
         <p class="contributors-status" id="contributorsStatus" role="status">Loading contributors...</p>
