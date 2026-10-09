@@ -23,12 +23,15 @@ This index is generated from the `name` and `description` in each root-level ski
 | Skill | Description |
 | --- | --- |
 | [ai-memory-obsidian](./ai-memory-obsidian/SKILL.md) | Portable workflows for persistent memory and Obsidian across macOS, Linux, and Windows. Use when the user asks to recall or save past context, record decisions, create vault notes, or configure ai-memory, Obsidian CLI, or an Obsidian MCP bridge. |
+| [aprender](./aprender/SKILL.md) | Estude programação com explicações, perguntas e pequenos desafios adaptados ao que você demonstra entender. |
+| [concept-to-excalidraw](./concept-to-excalidraw/SKILL.md) | Transformar conceitos técnicos em diagramas e boards visuais editáveis no Excalidraw, entregando arquivo .excalidraw. Usar para explicar mecanismos, revisar visuais abstratos ou textuais e executar planos visuais de aulas; criar slides nativos e exportar imagens quando solicitados. |
+| [construir](./construir/SKILL.md) | Construir um projeto para aprender programação. Use quando o aluno pede um projeto ou quando aprender entrega uma atividade que precisa de arquivos, execução e etapas persistentes. |
 | [design-craft](./design-craft/SKILL.md) | Opinionated product-design skill for building, reviewing, polishing, and iterating on landing pages, apps, dashboards, AI products, design systems, and brand touchpoints. UX and comprehension first, then restraint (three type sizes, delete decoration), then foundations, then tactical craft — hierarchy, spacing systems, type scales, HSL palettes, shadows, finishing touches. Distilled from 20 YC Design Review videos (Linear, Stripe, Cursor, Framer) plus the Refactoring UI book. Use whenever the user asks to design, redesign, critique, or polish anything user-facing: "make it look better/more professional/trustworthy", de-slop the AI/vibe-coded look, fix a landing or pricing page, improve conversion, design an AI feature or agent UI, set up tokens or a design system, review a URL/screenshot/mockup. Also trigger for tactical UI questions — spacing feels off, visual hierarchy, choosing colors, typography, empty states, Tailwind/CSS styling — even without the word "design". Not for pure backend/DevOps work. |
 | [good-design](./good-design/SKILL.md) | Design and audit product experiences for ethical conversion, activation, retention, and expansion using product and behavioral-design principles. Use for SaaS UX, landing pages, onboarding, dashboards, forms, pricing, and feature decisions—not for visual styling alone. |
 | [grill-me](./grill-me/SKILL.md) | Interview the user to clarify requirements, architecture, design, and business rules before implementation. Use the host's available interactive question interface and ask in rounds sized to its limits. Works across macOS, Linux, and Windows. Use when the user asks to grill an idea, plan a major feature, or invokes /grill-me. |
+| [prepare-technical-slides](./prepare-technical-slides/SKILL.md) | Pesquisar e preparar slides de aulas e palestras técnicas em PT-BR, com fontes verificáveis, sequência didática, contexto e um conceito por slide. Preserva o catálogo aprovado e a rastreabilidade de afirmações; usa concept-to-excalidraw para produzir diagramas, imagens e a apresentação nativa editável no Excalidraw. |
 | [skillpper-saver](./skillpper-saver/SKILL.md) | Aggressive token, context, and cost optimization mode for AI coding agents (Claude Code, Antigravity, Cursor, etc.). Prevents marathon sessions, eliminates redundant file re-reading, prioritizes text extraction over screenshots in browser automation, and manages context windows with surgical cutoff triggers. Use when the user requests token savings, context optimization, quota conservation, or when starting extensive refactoring, browsing, or debugging tasks. |
 | [study-quiz](./study-quiz/SKILL.md) | Use ao pedir quiz, teste, prova, simulado, questões de múltipla escolha, mini-desafio, gabarito, “me testa sobre X”, “gera um quiz de X” ou uma avaliação sobre um assunto, em um nível ou numa faixa de níveis. Use também quando o usuário responder um quiz gerado aqui e quiser a correção. Não use para palestras, slides, design, flashcards, resumo ou plano de estudo. |
-| [technical-talk-research](./technical-talk-research/SKILL.md) | Pesquisa e estrutura palestras técnicas em PT-BR com fontes atuais e verificáveis. Use ao pedir referências para uma explicação técnica, levantamento de artigos ou posts recentes, curadoria de fontes, roteiro ou slides de palestra, ou revisão da bibliografia de uma apresentação. Pesquisa somente no catálogo de fontes aprovado, mantém rastreabilidade de cada afirmação técnica e exige um slide final de Referências bibliográficas. Cria apresentações exclusivamente pelo MCP da Gamma, usando o template \`nkhgcucv1lw00wc\`. |
 
 <!-- SKILLS:END -->
 
@@ -87,7 +90,7 @@ Start a new session in your agent and ask for a task that matches the skill. For
 
 > Use design-craft to review this landing page and suggest the three most useful improvements.
 
-Read the skill's `SKILL.md` for its workflow and prerequisites. Some skills require additional tools or services; `technical-talk-research`, for example, requires Gamma MCP and its specified template to create presentations.
+Read the skill's `SKILL.md` for its workflow and prerequisites. Some skills require additional tools or services; `prepare-technical-slides`, for example, uses `concept-to-excalidraw` for editable diagrams and native Excalidraw presentations. Install both skills for that workflow; editing a live scene or configuring native slides also requires access to the appropriate Excalidraw account.
 
 ## How to contribute
 
@@ -153,19 +156,21 @@ npx skills add . --skill my-skill
 
 Try a realistic task and check that the skill produces the expected result. For an existing skill, check that your changes still support its original use case.
 
-You can also validate the metadata and preview the generated index with Python 3.10 or later:
+Index generation supports Python 3.10 or later. Skill validation and the full test suite use Python 3.12, matching the CI runtime:
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -r scripts/requirements.txt
+python --version
 python scripts/update_skills_index.py
+python scripts/validate_skills.py --worktree . --json /tmp/skill-validation.json --markdown /tmp/skill-validation.md
 python scripts/update_skills_index.py --check
 python scripts/update_skill_votes.py --check
 python -m unittest discover -s tests
 ```
 
-Edit skill descriptions in their `SKILL.md` files. The table above is generated automatically; you do not need to maintain its rows by hand.
+Edit skill descriptions in their `SKILL.md` files. Run `python scripts/update_skills_index.py` and commit the resulting README table change with your pull request. The index check is read-only; it does not commit or push changes for you.
 
 ### 4. Open a pull request
 
@@ -175,14 +180,12 @@ git commit -m "feat: add my-skill"
 git push -u origin add/my-skill
 ```
 
-Open a pull request from your branch to this repository's default branch. Explain the problem your skill solves, include an example prompt, and describe how you tested it. For improvements, explain what changes for the user. GitHub Actions validates the metadata and index generator; the README index is refreshed after merge.
+Open a pull request from your branch to this repository's default branch. Explain the problem your skill solves, include a happy-path and boundary example, and describe how you tested it. For improvements, explain what changes for the user. Include the review manifest, declared access, and any regenerated `.skill` archive when applicable. The README index change must be generated and committed in the pull request.
 
 For ideas or problems that do not need a pull request yet, [open an issue](https://github.com/kipperdev/skillpper/issues).
 
 ## How the index stays up to date
 
-The [skills index workflow](.github/workflows/update-skills-index.yml) discovers root-level `*/SKILL.md` files and generates an alphabetical table from their YAML metadata. Adding, renaming, removing, or changing a skill updates the index on the next relevant push to the default branch. Everything outside the index markers stays untouched.
+The [skills index workflow](.github/workflows/update-skills-index.yml) discovers root-level `*/SKILL.md` files and checks that the alphabetical table matches their YAML metadata. Run `python scripts/update_skills_index.py` after adding, renaming, removing, or changing a skill, then commit the generated README change in the same pull request. The generator preserves everything outside the exact `SKILLS:START` and `SKILLS:END` markers.
 
-Pull requests run validation without pushing changes. On the default branch, the workflow commits `README.md` only when the generated index has changed. Maintainers can also run it from **Actions → Update skills index → Run workflow**, selecting the default branch.
-
-The update job requests `contents: write` for the built-in `GITHUB_TOKEN`; no personal access token is required. Repository or organization policies and branch rules must allow that bot to push to the default branch. If direct pushes are blocked, generate the index locally and include the README change in a pull request.
+Skill review validation is static. It does not install or execute skills, call an AI model, fetch third-party URLs, or run the manifest examples. A passing check is not a safety certification. See [SECURITY.md](SECURITY.md) for scope and finding disposition. Merge blocking requires an administrator to activate required checks and code-owner review.

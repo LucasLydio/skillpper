@@ -22,7 +22,7 @@ class SkillVotesTests(unittest.TestCase):
         skills = {
             "study-quiz": "Quiz helper",
             "design-craft": "Design helper",
-            "technical-talk-research": "Research helper",
+            "prepare-technical-slides": "Research helper",
         }
         discussions = {
             "study-quiz": {
@@ -38,9 +38,9 @@ class SkillVotesTests(unittest.TestCase):
         ranking = render_ranking(skills, discussions, "Skill Votes")
 
         self.assertLess(ranking.index("[design-craft]"), ranking.index("[study-quiz]"))
-        self.assertLess(ranking.index("[study-quiz]"), ranking.index("[technical-talk-research]"))
+        self.assertLess(ranking.index("[study-quiz]"), ranking.index("[prepare-technical-slides]"))
         self.assertIn("| 1 | [design-craft](./design-craft/SKILL.md) | 7 | [Vote](", ranking)
-        self.assertIn("| 3 | [technical-talk-research](./technical-talk-research/SKILL.md) | 0 | Not created yet |", ranking)
+        self.assertIn("| 3 | [prepare-technical-slides](./prepare-technical-slides/SKILL.md) | 0 | Not created yet |", ranking)
 
     def test_upvote_count_reads_discussion_upvotes(self):
         self.assertEqual(upvote_count({"upvoteCount": 3}), 3)

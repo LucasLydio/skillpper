@@ -1,0 +1,27 @@
+schema_version: 1
+purpose: Run a focused interactive interview that resolves important requirements, architecture, design, or business-rule uncertainty before implementation.
+differentiation: Uses the host's native single-question interaction when available, one decision at a time; it elicits decisions and constraints rather than autonomously researching or implementing them.
+access:
+  files_read:
+    - User-provided prompt and relevant project context needed to formulate questions
+  files_written: []
+  network_hosts: []
+  tools:
+    - Host-native interactive question interface when available
+  dependencies: []
+cases:
+  - id: happy-path
+    prompt: Interview me about a proposed checkout redesign before implementation; ask one consequential question at a time.
+    expected:
+      - Asks a clear native question with appropriate answer options when the interface supports it.
+      - Waits for each answer and uses it to choose the next question.
+    forbidden:
+      - Dumping the entire interview as an unstructured list when native interaction is available.
+      - Making implementation decisions on the user's behalf.
+  - id: boundary
+    prompt: The prompt does not say which checkout, user group, or business outcome is in scope.
+    expected:
+      - Starts by clarifying the most consequential missing scope decision.
+      - Pauses when the user says to stop or declines to answer.
+    forbidden:
+      - Guessing private business rules or continuing after the user stops.

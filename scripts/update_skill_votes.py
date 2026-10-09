@@ -230,7 +230,8 @@ def canonical_discussions(skills: dict[str, str], registry: dict[str, dict], dis
             print(f"Registered vote discussion for {skill} was not found.")
             continue
         marker = parse_skill_marker(discussion.get("body", ""))
-        if marker != skill:
+        # An explicit registry marker preserves a renamed skill's existing discussion.
+        if marker != entry.get("marker", skill):
             print(f"Registered vote discussion for {skill} has an invalid marker; ignoring it.")
             continue
         discussions[skill] = discussion

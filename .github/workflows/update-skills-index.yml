@@ -1,4 +1,4 @@
-name: Update skills index
+name: Check skills index
 
 on:
   push:
@@ -24,49 +24,23 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out source
+        uses: actions/checkout@v7
         with:
           persist-credentials: false
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - run: python -m pip install -r scripts/requirements.txt
-      # PR contributors need not commit generated rows; malformed metadata still fails.
-      - run: python scripts/update_skills_index.py
-      - run: python -m unittest discover -s tests
-      - run: python scripts/update_skills_index.py --check
+          submodules: false
+          lfs: false
 
-  update:
-    needs: validate
-    if: >-
-      github.event_name != 'pull_request' &&
-      github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    concurrency:
-      group: skills-index-update
-      cancel-in-progress: false
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          # Start from the latest branch state, even if this run was queued.
-          ref: ${{ github.event.repository.default_branch }}
-      - uses: actions/setup-python@v5
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v7
         with:
           python-version: '3.12'
-      - run: python -m pip install -r scripts/requirements.txt
-      - run: python scripts/update_skills_index.py
-      - name: Commit the updated index
-        env:
-          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
-        run: |
-          if git diff --quiet -- README.md; then
-            echo "Skills index is already up to date."
-            exit 0
-          fi
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add README.md
-          git commit -m "docs: update skills index"
-          git push origin "HEAD:$DEFAULT_BRANCH"
+
+      - name: Install project test dependencies
+        run: python -m pip install --disable-pip-version-check -r scripts/requirements.txt
+
+      - name: Check generated index freshness
+        run: python scripts/update_skills_index.py --check
+
+      - name: Run unit tests
+        run: python -m unittest discover -s tests -v

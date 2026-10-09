@@ -1,15 +1,16 @@
-import re
-import tempfile
+import stat
 import unittest
-import zipfile
 from pathlib import Path
+
+from scripts.skill_validation.bundles import validate_bundle
+from scripts.skill_validation.models import Skill, SourceFile
 
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 class SkillBundleTests(unittest.TestCase):
-    def test_bundles_extract_with_their_relative_markdown_links_intact(self):
+    def test_optional_archives_match_their_complete_source_tree(self):
         bundles = sorted(ROOT.glob("*.skill"))
         self.assertTrue(bundles, "expected at least one distributable skill bundle")
 

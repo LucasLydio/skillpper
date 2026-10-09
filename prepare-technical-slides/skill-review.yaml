@@ -1,0 +1,39 @@
+schema_version: 1
+purpose: Pesquisar e preparar aulas e palestras técnicas com fontes, sequência didática e produção visual no Excalidraw.
+differentiation: Planeja evidências e aprendizagem; usa concept-to-excalidraw para desenhar mecanismos e montar slides nativos, preservando contexto independente por aula.
+access:
+  files_read:
+    - Briefing, referências, código da demonstração e materiais de aula fornecidos
+    - Catálogo de fontes e modelo de blueprint incluídos na skill
+    - Instruções da skill concept-to-excalidraw
+  files_written:
+    - Blueprint Markdown, notas da professora e bibliografia no destino autorizado
+    - Arquivos .excalidraw e exportações solicitadas produzidos via concept-to-excalidraw
+  network_hosts:
+    - Fontes e perfis permitidos em references/source-catalog.md
+    - Vídeos e referências visuais fornecidos pela usuária para analisar didática
+    - excalidraw.com, app.excalidraw.com e plus.excalidraw.com quando a produção online for solicitada
+  tools:
+    - Busca e leitura web para pesquisa
+    - Edição de arquivos e Python 3 para validação do blueprint
+    - Ferramentas de navegador ou conector Excalidraw usadas por concept-to-excalidraw
+  dependencies:
+    - Python 3 para scripts/validate_references.py
+    - concept-to-excalidraw para produção visual; pesquisa pontual funciona sem essa dependência
+    - Acesso à conta e ao recurso de slides nativos do Excalidraw para conferir a apresentação online
+cases:
+  - id: happy-path
+    prompt: Prepare uma aula introdutória de arquitetura com teoria visual e slides no Excalidraw, usando as referências fornecidas.
+    expected:
+      - Produz blueprint com fontes rastreáveis, conceito introdutório e contexto suficiente antes do caso.
+      - Usa concept-to-excalidraw com mecanismo visual, dados, notas, ordem e fontes por slide.
+      - Entrega .excalidraw editável e informa se os slides nativos foram conferidos no produto.
+    forbidden:
+      - Exigir Gamma ou template de outro serviço para produzir a apresentação.
+      - Transformar todo o conteúdo em caixas de texto sem explicar o mecanismo.
+  - id: boundary
+    prompt: Encontre referências para uma afirmação técnica; não crie apresentação.
+    expected:
+      - Entrega pesquisa com fontes, limites e data de acesso sem iniciar produção visual.
+    forbidden:
+      - Criar slides, configurar integrações ou exigir uma conta no Excalidraw para responder à pesquisa.

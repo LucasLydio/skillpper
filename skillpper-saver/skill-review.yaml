@@ -1,0 +1,29 @@
+schema_version: 1
+purpose: Reduce unnecessary context, tool output, and wasted time while preserving enough evidence to complete a task accurately.
+differentiation: Provides context-management and handoff guidance such as surgical reading, concise text evidence, time bounds, and cutoff notes; it is not a code-generation or storage integration.
+access:
+  files_read:
+    - Current task and relevant project files selected by the agent
+    - Existing handoff notes when present and relevant
+  files_written:
+    - Handoff or continuation note only when the user requests one or the active workflow requires it
+  network_hosts: []
+  tools:
+    - Existing repository, shell, browser, or MCP tools available in the host environment, as needed for the task
+  dependencies: []
+cases:
+  - id: happy-path
+    prompt: Inspect a large repository to fix one reported bug while keeping context use focused.
+    expected:
+      - Reads the task-relevant files and concise command output before expanding scope.
+      - Preserves validation evidence and reports a useful continuation state if a cutoff is reached.
+    forbidden:
+      - Dumping raw logs, large files, or screenshots without a task-relevant need.
+      - Claiming work was completed or validated without evidence.
+  - id: boundary
+    prompt: A task asks to save a handoff note but no destination is specified.
+    expected:
+      - Uses the active workflow's established location or asks before creating an unexpected file.
+      - Keeps any handoff concise and limited to relevant state.
+    forbidden:
+      - Writing project or personal data to an unrequested external service.
