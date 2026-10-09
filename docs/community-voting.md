@@ -10,7 +10,7 @@ For the full post-merge setup checklist, see [Community Voting Rollout](communit
 2. Create a discussion category named `Skill Votes`.
 3. Merge the voting workflow.
 4. Run **Actions -> Update skill votes -> Run workflow** with `sync_discussions` enabled.
-5. Enable GitHub Pages from the default branch's `/docs` folder.
+5. Set GitHub Pages source to **GitHub Actions** and run **Deploy community page** once.
 6. Configure a Cronitor HTTP Check to dispatch the workflow every five minutes, as described in [Community Voting Rollout](community-voting-rollout.md).
 
 The first manual run creates one vote discussion for each root-level skill and records its discussion ID in `docs/vote-discussions.json`. Later Cronitor-triggered runs create any missing vote discussions and update `RANKING.md` and `docs/votes.json` from the current upvote counts. GitHub's own schedule trigger is not used.

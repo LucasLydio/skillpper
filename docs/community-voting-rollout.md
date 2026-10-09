@@ -15,10 +15,10 @@ Skill Votes
 ```
 
 6. Go to **Settings -> Pages**.
-7. Set **Source** to **Deploy from a branch**.
-8. Select the default branch.
-9. Select the `/docs` folder.
-10. Save.
+7. Set **Source** to **GitHub Actions** and save.
+8. After merging the Pages workflow, run **Actions -> Deploy community page -> Run workflow** once.
+
+The deployment workflow publishes the `/docs` folder and generates the contributor list without committing it. It also runs on pushes to `main` and after vote data changes.
 
 The dashboard will be available at:
 
@@ -130,4 +130,5 @@ If the workflow fails to create discussions:
 If the dashboard loads but shows old data:
 
 - confirm `docs/votes.json` was updated by the workflow
-- check whether GitHub Pages deployed the updated `/docs` files; commits made with `GITHUB_TOKEN` do not trigger branch-based Pages builds
+- confirm **Deploy community page** succeeded after the vote update; unchanged vote data does not trigger a new deployment
+- confirm **Settings -> Pages -> Source** is **GitHub Actions**

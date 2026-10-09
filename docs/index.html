@@ -9,6 +9,9 @@
       content="Community ranking for Skillpper skills, powered by GitHub Discussion votes."
     />
     <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crafty+Girls&family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
   </head>
   <body>
     <header class="site-header">
@@ -134,10 +137,12 @@
         </div>
       </section>
 
+      <div class="middle-ui">
+
       <section class="search" aria-labelledby="searchTitle">
         <div class="toolbar" aria-label="Skill search and metadata">
           <label class="search-field">
-            <span>Search skills</span>
+            <span id="searchTitle">Search skills</span>
             <input
               id="searchInput"
               type="search"
@@ -147,17 +152,21 @@
           </label>
           <p class="updated" id="updatedAt">Loading votes...</p>
         </div>
-        <div class="contributors" aria-label="Contributors">
-          <p class="eyebrow">Contributors</p>
-          <div class="avatars" id="contributors"></div>
-        </div>
       </section>
 
-      <section class="leaderboard" aria-labelledby="leaderboardTitle">
-        <div class="section-heading">
-          <p class="eyebrow">Live from discussions</p>
-          <h2 id="leaderboardTitle">Leaderboard</h2>
+      <section class="contributors" aria-labelledby="contributorsTitle">
+        <div class="contributors-heading">
+          <h2 id="contributorsTitle">Contributors</h2>
+          <a class="text-link contributors-all" id="contributorsAll" href="#" hidden>View all on GitHub</a>
         </div>
+        <ul class="avatars" id="contributors"></ul>
+        <p class="contributors-status" id="contributorsStatus" role="status">Loading contributors...</p>
+      </section>
+
+
+      </div>
+
+      <section class="leaderboard" aria-labelledby="leaderboardTitle">
         <div class="skill-list" id="skillList" aria-live="polite"></div>
         <p class="empty-state" id="emptyState" hidden>
           No skills match your search.

@@ -11,6 +11,9 @@ const totalVotes = document.querySelector("#totalVotes");
 const totalSkills = document.querySelector("#totalSkills");
 const updatedAt = document.querySelector("#updatedAt");
 const repositoryLink = document.querySelector("#repositoryLink");
+const contributors = document.querySelector("#contributors");
+const contributorsAll = document.querySelector("#contributorsAll");
+const contributorsStatus = document.querySelector("#contributorsStatus");
 
 function inferRepositoryFromPagesUrl() {
   const host = window.location.hostname;
@@ -49,6 +52,48 @@ function configureLinks(repository) {
   if (!repository) return;
   repositoryLink.href = repositoryUrl(repository);
   repositoryLink.hidden = false;
+}
+
+function configureContributorsLink(repository) {
+  if (!repository || !/^[\w.-]+\/[\w.-]+$/.test(repository)) return;
+  contributorsAll.href = `${repositoryUrl(repository)}/graphs/contributors`;
+  contributorsAll.hidden = false;
+}
+
+async function loadContributors() {
+  try {
+    const response = await fetch("contributors.json");
+    if (!response.ok) throw new Error(`Contributor data returned ${response.status}`);
+    const data = await response.json();
+    if (!Array.isArray(data.contributors)) throw new Error("Invalid contributor data");
+
+    configureContributorsLink(data.repository);
+    contributors.replaceChildren();
+    data.contributors.forEach((person) => {
+      if (!person.login || !person.html_url || !person.avatar_url) return;
+      const item = document.createElement("li");
+      const link = document.createElement("a");
+      const avatar = document.createElement("img");
+      const name = document.createElement("span");
+      link.className = "contributor-link";
+      link.href = person.html_url;
+      avatar.src = person.avatar_url;
+      avatar.alt = "";
+      avatar.width = 36;
+      avatar.height = 36;
+      avatar.loading = "lazy";
+      name.textContent = person.login;
+      link.append(avatar, name);
+      item.append(link);
+      contributors.append(item);
+    });
+    contributorsStatus.textContent = contributors.childElementCount
+      ? ""
+      : "No contributors yet.";
+  } catch (error) {
+    configureContributorsLink(state.repository || inferRepositoryFromPagesUrl());
+    contributorsStatus.textContent = "Contributors are unavailable right now.";
+  }
 }
 
 function renderSkills(skills) {
@@ -113,3 +158,4 @@ async function loadVotes() {
 
 searchInput.addEventListener("input", applySearch);
 loadVotes();
+loadContributors();
