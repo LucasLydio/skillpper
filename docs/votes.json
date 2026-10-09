@@ -1,9 +1,9 @@
 {
-  "updated_at": "2026-10-07T21:04:18Z",
+  "updated_at": "2026-10-09T21:18:37Z",
   "repository": "LucasLydio/skillpper",
   "default_branch": "main",
   "category": "Skill Votes",
-  "total_skills": 7,
+  "total_skills": 10,
   "total_votes": 8,
   "skills": [
     {
@@ -35,25 +35,46 @@
       "rank": 4
     },
     {
+      "skill": "prepare-technical-slides",
+      "description": "Pesquisar e preparar slides de aulas e palestras técnicas em PT-BR, com fontes verificáveis, sequência didática, contexto e um conceito por slide. Preserva o catálogo aprovado e a rastreabilidade de afirmações; usa concept-to-excalidraw para produzir diagramas, imagens e a apresentação nativa editável no Excalidraw.",
+      "votes": 1,
+      "discussion_url": "https://github.com/LucasLydio/skillpper/discussions/9",
+      "rank": 5
+    },
+    {
       "skill": "study-quiz",
       "description": "Use ao pedir quiz, teste, prova, simulado, questões de múltipla escolha, mini-desafio, gabarito, “me testa sobre X”, “gera um quiz de X” ou uma avaliação sobre um assunto, em um nível ou numa faixa de níveis. Use também quando o usuário responder um quiz gerado aqui e quiser a correção. Não use para palestras, slides, design, flashcards, resumo ou plano de estudo.",
       "votes": 1,
       "discussion_url": "https://github.com/LucasLydio/skillpper/discussions/8",
-      "rank": 5
+      "rank": 6
     },
     {
-      "skill": "technical-talk-research",
-      "description": "Pesquisa e estrutura palestras técnicas em PT-BR com fontes atuais e verificáveis. Use ao pedir referências para uma explicação técnica, levantamento de artigos ou posts recentes, curadoria de fontes, roteiro ou slides de palestra, ou revisão da bibliografia de uma apresentação. Pesquisa somente no catálogo de fontes aprovado, mantém rastreabilidade de cada afirmação técnica e exige um slide final de Referências bibliográficas. Cria apresentações exclusivamente pelo MCP da Gamma, usando o template `nkhgcucv1lw00wc`.",
-      "votes": 1,
-      "discussion_url": "https://github.com/LucasLydio/skillpper/discussions/9",
-      "rank": 6
+      "skill": "aprender",
+      "description": "Estude programação com explicações, perguntas e pequenos desafios adaptados ao que você demonstra entender.",
+      "votes": 0,
+      "discussion_url": "https://github.com/LucasLydio/skillpper/discussions/12",
+      "rank": 7
+    },
+    {
+      "skill": "concept-to-excalidraw",
+      "description": "Transformar conceitos técnicos em diagramas e boards visuais editáveis no Excalidraw, entregando arquivo .excalidraw. Usar para explicar mecanismos, revisar visuais abstratos ou textuais e executar planos visuais de aulas; criar slides nativos e exportar imagens quando solicitados.",
+      "votes": 0,
+      "discussion_url": "https://github.com/LucasLydio/skillpper/discussions/13",
+      "rank": 8
+    },
+    {
+      "skill": "construir",
+      "description": "Construir um projeto para aprender programação. Use quando o aluno pede um projeto ou quando aprender entrega uma atividade que precisa de arquivos, execução e etapas persistentes.",
+      "votes": 0,
+      "discussion_url": "https://github.com/LucasLydio/skillpper/discussions/14",
+      "rank": 9
     },
     {
       "skill": "grill-me",
       "description": "Interview the user to clarify requirements, architecture, design, and business rules before implementation. Use the host's available interactive question interface and ask in rounds sized to its limits. Works across macOS, Linux, and Windows. Use when the user asks to grill an idea, plan a major feature, or invokes /grill-me.",
       "votes": 0,
       "discussion_url": "https://github.com/LucasLydio/skillpper/discussions/6",
-      "rank": 7
+      "rank": 10
     }
   ]
 }

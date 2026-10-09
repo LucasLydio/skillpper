@@ -4,6 +4,18 @@
       "id": "D_kwDOU5lMJ84Apxe4",
       "url": "https://github.com/LucasLydio/skillpper/discussions/4"
     },
+    "aprender": {
+      "id": "D_kwDOU5lMJ84Ap6Q7",
+      "url": "https://github.com/LucasLydio/skillpper/discussions/12"
+    },
+    "concept-to-excalidraw": {
+      "id": "D_kwDOU5lMJ84Ap6Q8",
+      "url": "https://github.com/LucasLydio/skillpper/discussions/13"
+    },
+    "construir": {
+      "id": "D_kwDOU5lMJ84Ap6Q9",
+      "url": "https://github.com/LucasLydio/skillpper/discussions/14"
+    },
     "design-craft": {
       "id": "D_kwDOU5lMJ84Apxe5",
       "url": "https://github.com/LucasLydio/skillpper/discussions/5"
@@ -16,6 +28,11 @@
       "id": "D_kwDOU5lMJ84Apxe6",
       "url": "https://github.com/LucasLydio/skillpper/discussions/6"
     },
+    "prepare-technical-slides": {
+      "id": "D_kwDOU5lMJ84Apxe9",
+      "url": "https://github.com/LucasLydio/skillpper/discussions/9",
+      "marker": "technical-talk-research"
+    },
     "skillpper-saver": {
       "id": "D_kwDOU5lMJ84Apxe7",
       "url": "https://github.com/LucasLydio/skillpper/discussions/7"
@@ -23,11 +40,6 @@
     "study-quiz": {
       "id": "D_kwDOU5lMJ84Apxe8",
       "url": "https://github.com/LucasLydio/skillpper/discussions/8"
-    },
-    "prepare-technical-slides": {
-      "id": "D_kwDOU5lMJ84Apxe9",
-      "url": "https://github.com/LucasLydio/skillpper/discussions/9",
-      "marker": "technical-talk-research"
     }
   }
 }
